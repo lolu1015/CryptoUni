@@ -1,4 +1,4 @@
-let mongoose = require('mongoose')
+let mongoose = require('mongoose');
 let studentSchema = mongoose.Schema({
   name: String,
   marks: Number,
@@ -6,6 +6,6 @@ let studentSchema = mongoose.Schema({
     name: String,
     class: String
   }
-}, { collection: 'students' })
-let Student = mongoose.model('Student', studentSchema)
-module.exports = Student
+}, { collection: 'students' });
+let Student = mongoose.model('Student', studentSchema);
+module.exports = Student;
