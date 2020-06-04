@@ -1,0 +1,15 @@
+
+<div class="col-4 mx-auto" style="margin-top: 10px">
+  <h3>Entdecken</h3>
+<div class="form-group">
+  <div *ngIf="searchString.length === 0" class="input-group">
+    <input name="usernameInp" class="form-control" [(ngModel)]="searchString" placeholder="Suchen..." type="text">
+  </div>
+  <div *ngIf="searchString.length > 0" class="input-group">
+    <input name="usernameInp" class="form-control" [(ngModel)]="searchString" placeholder="{{searchString}}" type="text">
+  </div>
+</div>
+  <li *ngFor="let module of filteredModules(); index as i; first as isFirst">
+    {{module.name}}
+  </li>
+</div>

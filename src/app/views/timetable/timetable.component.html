@@ -1,0 +1,66 @@
+<div class="card text-left">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/studiesoverview">Offene Module</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/takencourses">Bereits Belegte Module</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" routerLink="/timetable">Stundenplan</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-body">
+    <div *ngIf="eventTitle.length > 0" class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="eventModalLabel">{{eventTitle}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {{eventInformation}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="dismissSearchText()" data-dismiss="modal">Close</button>
+            <button type="button" routerLink="/explore" data-dismiss="modal" (click)="setSearchText()" class="btn btn-primary">Replace</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="newEventModalLabel">Neuer Termin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input name="usernameInp" class="form-control" [(ngModel)]="newTitle" placeholder="Titel" type="text">
+            <input name="usernameInp" class="form-control" [(ngModel)]="newModule" placeholder="Modul" type="text">
+            <input name="usernameInp" class="form-control" [(ngModel)]="newDescription" placeholder="Beschreibung" type="text">
+            <input name="usernameInp" class="form-control" [(ngModel)]="newStart" placeholder="Start" type="text">
+            <input name="usernameInp" class="form-control" [(ngModel)]="newEnd" placeholder="Ende" type="text">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="dismissSearchText()" data-dismiss="modal">Close</button>
+            <button type="button" data-dismiss="modal" (click)="addEvent()" class="btn btn-primary">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newEventModal">Neuer Eintrag</button>
+    <full-calendar deepChangeDetection="true" defaultView="timeGridWeek" [weekends]="false" [plugins]="calendarPlugins" [minTime]="'08:00'" editable="true" eventStartEditable="true" eventResizableFromStart="true" eventDurationEditable="true" contentHeight="auto"
+                   [maxTime]="'18:00'" [events]="calendarEvents" (eventClick)="eventClicked($event)" data-toggle="modal" data-target="#eventModal"></full-calendar>
+  </div>
+
+</div>
+
+
