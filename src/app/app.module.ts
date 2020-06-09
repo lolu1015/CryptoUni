@@ -15,6 +15,7 @@ import { StudiesOverviewComponent } from './views/studies-overview/studies-overv
 import { TakenCoursesComponent } from './views/taken-courses/taken-courses.component';
 import { TimetableComponent } from './views/timetable/timetable.component';
 import { ExploreComponent } from './views/explore/explore.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { ExploreComponent } from './views/explore/explore.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    FullCalendarModule
+    FullCalendarModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -57,8 +57,8 @@
       </div>
     </div>
     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newEventModal">Neuer Eintrag</button>
-    <full-calendar deepChangeDetection="true" defaultView="timeGridWeek" [weekends]="false" [plugins]="calendarPlugins" [minTime]="'08:00'" editable="true" eventStartEditable="true" eventResizableFromStart="true" eventDurationEditable="true" contentHeight="auto"
-                   [maxTime]="'18:00'" [events]="calendarEvents" (eventClick)="eventClicked($event)" data-toggle="modal" data-target="#eventModal"></full-calendar>
+    <full-calendar #calendar deepChangeDetection="true" defaultView="timeGridWeek" [weekends]="false" [plugins]="calendarPlugins" [minTime]="'08:00'" editable="true" eventStartEditable="true" eventResizableFromStart="true" eventDurationEditable="true" contentHeight="auto"
+                    [maxTime]="'18:00'" [events]="calendarEvents" (datesRender)="weekClicked()" (eventClick)="eventClicked($event)" data-toggle="modal" data-target="#eventModal"></full-calendar>
   </div>
 
 </div>

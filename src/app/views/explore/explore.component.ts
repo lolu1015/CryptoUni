@@ -48,4 +48,8 @@ export class ExploreComponent implements OnInit {
     else
       return this.dummyModules.filter(mod => mod.module.toLowerCase().includes(this.searchString.toLowerCase()) || mod.name.toLowerCase().includes(this.searchString.toLowerCase()));
   }
+
+  replace(event) {
+    console.log("??" + event.name)
+  }
 }

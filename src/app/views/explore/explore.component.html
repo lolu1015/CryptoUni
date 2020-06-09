@@ -9,7 +9,7 @@
     <input name="usernameInp" class="form-control" [(ngModel)]="searchString" placeholder="{{searchString}}" type="text">
   </div>
 </div>
-  <li *ngFor="let module of filteredModules(); index as i; first as isFirst">
+  <li *ngFor="let module of filteredModules(); index as i; first as isFirst" (click)="replace(module)">
     {{module.name}}
   </li>
 </div>

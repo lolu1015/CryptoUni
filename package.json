@@ -26,9 +26,10 @@
     "@fullcalendar/timegrid": "^4.4.2",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
-    "express": "^4.17.1",
+    "ical": "^0.8.0",
     "jquery": "^3.5.1",
     "mongoose": "^5.9.16",
+    "node-ical": "^0.11.3",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
