@@ -17,6 +17,9 @@ import { TimetableComponent } from './views/timetable/timetable.component';
 import { ExploreComponent } from './views/explore/explore.component';
 import {HttpClientModule} from "@angular/common/http";
 
+import { ChatModule } from '@progress/kendo-angular-conversational-ui';
+import {ChatService} from "./views/explore/chat.service";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,16 +31,17 @@ import {HttpClientModule} from "@angular/common/http";
     StudiesOverviewComponent,
     TakenCoursesComponent,
     TimetableComponent,
-    ExploreComponent
+    ExploreComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     FullCalendarModule,
-    HttpClientModule
+    HttpClientModule,
+    ChatModule
   ],
-  providers: [],
+  providers: [ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

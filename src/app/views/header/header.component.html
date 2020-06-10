@@ -17,7 +17,7 @@
     </div>
     </div>
     <div *ngIf="isLoggedIn()">
-    <button type="button" (click)="logout()" class="btn btn-warning navbar-btn">Abmelden</button>
+    <button type="button" routerLink="/home" (click)="logout()" class="btn btn-warning navbar-btn">Abmelden</button>
     </div>
     <div *ngIf="!isLoggedIn()">
       <button type="button" routerLink="/login" class="btn btn-warning navbar-btn">Anmelden</button>

@@ -6,8 +6,11 @@ import { EventInput } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import {HttpClient} from "@angular/common/http";
 import {FullCalendarComponent} from "@fullcalendar/angular";
+import {DatabaseService} from "../../service";
+import {LoginComponent} from "../login/login.component";
 
 let savedTitle = ""
+let loadAddtionalModule = ""
 
 declare var ICAL: any;
 
@@ -27,6 +30,7 @@ export class TimetableComponent implements OnInit {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   calendarPlugins = [dayGridPlugin, timeGrid, interactionPlugin];
   calendarEvents
+  showModule = "m"
   sampleEvents = [
     {
       title: 'Mathe 1',
@@ -64,15 +68,21 @@ export class TimetableComponent implements OnInit {
   start
   end
 
+  application = false
 
-
-  recur_events = []
-
-  constructor(private httpClient: HttpClient) {
+  constructor(private service: DatabaseService, private userService: LoginComponent) {
   }
 
   ngOnInit(): void {
-    this.init()
+
+    console.log("§§§ " +  loadAddtionalModule)
+    if (loadAddtionalModule.length > 0) {
+      this.application = true
+      this.reloadData()
+    } else {
+      this.application = false
+      this.init()
+    }
   }
 
   eventClicked(event) {
@@ -109,47 +119,45 @@ export class TimetableComponent implements OnInit {
   }
 
 
-
-  ics_sources = [
-    {url: 'http://localhost:4000/getical'}
-  ]
-
-  amountSources = 1
   data
 
   init() {
-    this.httpClient.get(this.ics_sources[0].url, {responseType: 'text'}).subscribe(data => {
-      //this.calendarComponent.eventSources = []
+    this.service.getICAL(this.userService.getId()).subscribe(data => {
+      console.log("asdad " + JSON.stringify(data))
       this.data = data
-
-      this.amountSources -= 1
-
       this.weekClicked()
-      //this has to be to the first (*current*) visible date in schedule
-      let date = new Date()
-
-      //this has to be to the last (*current*) visible date in schedule
-      let newDate = new Date(Date.now() + 1000 /*sec*/ * 60 /*min*/ * 60 /*hour*/ * 24 /*day*/ * 10)
-
-
+    }, error => {
+      console.log("errorrr?????")
     })
   }
 
   weekClicked() {
     this.calendarEvents = []
     recur_events = []
-
-    console.log("???")
     this.sampleEvents.forEach(e => {
       this.calendarEvents.push(e)
     })
-
     fc_events(this.data, undefined, this.calendarEvents)
-
     this.start = this.calendarComponent.getApi().view.currentStart
     this.end = this.calendarComponent.getApi().view.currentEnd
     expand_recur_events(this.start, this.end, this.calendarEvents)
-    console.log("???")
+  }
+
+  reloadData() {
+    this.service.getICALModule(this.userService.getId(), loadAddtionalModule).subscribe(data => {
+      this.data = data
+      this.weekClicked()
+    })
+  }
+
+  deleteSelection() {
+    loadAddtionalModule = ""
+    this.application = false
+    this.init()
+  }
+
+  setAdditionalModule(module) {
+    loadAddtionalModule = module
   }
 }
 
@@ -210,17 +218,10 @@ function expand_recur_event(event, dtstart, dtend, event_callback) {
     dtstart:event.getFirstPropertyValue('dtstart')
   })
 
-  console.log(`ev: ${JSON.stringify(event)}`)
-  console.log(`ev start: ${JSON.stringify(dtstart)}`)
-
-
-
-
   let duration = event_duration(event)
   while (! exp.complete && exp.next() < dtend) {
 
     if (exp.last >= dtstart) {
-      console.log(`one event ${JSON.stringify(event)}`)
       event = new ICAL.Component(event.toJSON())
       event.updatePropertyWithValue('dtstart', exp.last)
       event.updatePropertyWithValue('dtend', event_dtend(exp.last, duration))
@@ -239,28 +240,13 @@ function an_filter(string) {
 }
 
 function moment_icaltime(moment) {
-  console.log(`Moment ${JSON.stringify(moment)}`)
-    //return new ICAL.Time().fromJSDate(moment.toDate())
-
     return new ICAL.Time().fromJSDate(moment)
-
 }
 
 function expand_recur_events(start, end, calendarEvents) {
   let events = []
 
-  console.log(`START ${JSON.stringify(start)}`)
-  console.log(`END ${JSON.stringify(end)}`)
-  console.log("Length " + recur_events.length)
-
   recur_events.forEach(function(event, i){
-
-
-    console.log("EVENT " + JSON.stringify(event))
-
-
-
-
     let event_properties = event.event_properties
     expand_recur_event(event, moment_icaltime(start), moment_icaltime(end), function(event){
       fc_event(event, function(event){
@@ -271,7 +257,6 @@ function expand_recur_events(start, end, calendarEvents) {
   events.forEach(e => {
     calendarEvents.push(e)
   })
-  console.log(`events ${JSON.stringify(events)}`)
 }
 
 function fc_events(ics, event_properties, calendarEvents) {
@@ -314,18 +299,17 @@ function fc_event(event, event_callback) {
     //uncomment if you want to use click on date as forwarding-link
     //url:event.getFirstPropertyValue('url'),
     id:event.getFirstPropertyValue('uid'),
+    color: event.getFirstPropertyValue('color'),
+
     className:['event-'+an_filter(event.getFirstPropertyValue('uid'))],
     allDay:false
   }
   try {
-    console.log(`aaa ${JSON.stringify(event.getFirstPropertyValue('dtstart'))}`)
     e['start'] = event.getFirstPropertyValue('dtstart').toJSDate()
   } catch (TypeError) {
-    console.debug('Undefined "dtstart", vevent skipped.')
     return
   }
   try {
-    console.log(`bbb ${JSON.stringify(event.getFirstPropertyValue('dtend'))}`)
     e['end'] = event.getFirstPropertyValue('dtend').toJSDate()
   } catch (TypeError) {
     e['allDay'] = true

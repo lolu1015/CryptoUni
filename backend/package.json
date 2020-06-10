@@ -16,7 +16,9 @@
     "babel-watch": "^7.0.0"
   },
   "dependencies": {
+    "@types/crypto-js": "^3.1.47",
     "cors": "^2.8.5",
+    "crypto-js": "^4.0.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.18"
   }
