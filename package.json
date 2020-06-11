@@ -37,13 +37,10 @@
     "@types/crypto-js": "^3.1.47",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
-<<<<<<< HEAD
     "crypto-js": "^4.0.0",
     "eva-icons": "^1.1.2",
-=======
     "camunda-external-task-client-js": "^2.0.0",
     "config": "^3.3.1",
->>>>>>> 7023a2cb8cbb05daf437eb5f417898646ea5cb04
     "ical": "^0.8.0",
     "jquery": "^3.5.1",
     "mongoose": "^5.9.16",
