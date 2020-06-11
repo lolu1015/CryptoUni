@@ -24,4 +24,8 @@ export class DatabaseService {
   login(id, hash) {
     return this.httpClient.post(`${this.uri}/login`, {name: id, hash: hash}, {observe: 'response', responseType: 'text'});
   }
+
+  pushApplication(id, moduleId) {
+    return this.httpClient.post(`${this.uri}/getapplication`, {name: id, moduleId: moduleId}, {observe: 'response', responseType: 'text'});
+  }
 }

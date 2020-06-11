@@ -6,6 +6,7 @@ const app = express();
 const router = express.Router();
 let Student = require('./Model/student.ts')
 let Module = require('./Model/module.ts')
+let Application = require('./Model/application.ts')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/mydb');
@@ -66,6 +67,30 @@ router.route('/login').post((req, res) => {
       }
     }
   })
+});
+
+router.route('/getapplication').post((req, res) => {
+
+  res.set('Content-Type', 'text/html');
+  let newApplication = new Application;
+  let newModule = new Module;
+  let newStudent = new Student;
+
+  Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
+    Student.findOne({id: 'test'}, function(err, student) {if(student) {newStudent = student
+      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
+  newApplication.save((err, result) => {
+    if (err) {
+      console.log(err)
+    }
+    else {
+      console.log("success")
+      console.log("HIER: " + JSON.stringify(newApplication))
+      //CamundaCall
+    }
+  })}});
+  ;res.send("IrgendeinString")
+  }});
 });
 
 
@@ -217,6 +242,13 @@ let newStudent = new Student({
   ]
 })
 
+let newModule = new Module({
+  name: "SWE",
+  id: "SWE",
+  professor: "Test",
+  description: "test"
+})
+
 
 
 
@@ -229,6 +261,25 @@ Student.find((err, res) => {
       console.log(JSON.stringify(res));
     } else {
       newStudent.save((err, result) => {
+        if (err) {
+          console.log(err)
+        }
+        else {
+          console.log("success")
+        }
+      })
+    }
+  }
+});
+
+Module.find((err, res) => {
+  if (err)
+    console.log(err);
+  else {
+    if(res.length > 0) {
+      console.log(JSON.stringify(res));
+    } else {
+      newModule.save((err, result) => {
         if (err) {
           console.log(err)
         }

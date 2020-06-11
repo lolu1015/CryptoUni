@@ -161,7 +161,9 @@ export class TimetableComponent implements OnInit {
   }
 
   apply() {
-
+    console.log("apply wurde getriggert!!")
+    this.service.pushApplication(this.userService.getId(), loadAddtionalModule).subscribe();
+    console.log("apply wurde getriggert danach!!")
   }
 }
 

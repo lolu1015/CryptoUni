@@ -2,10 +2,10 @@ let mongooose = require('mongoose');
 let applicationSchema = mongooose.Schema({
   id: String,
   status: String,
-  module: Module,
-  student: Student,
+  module: [],
+  student: [],
   responsible: String,
 });
 
-let Application = mongose.model('Module', applicationSchema);
-module.exports = Module;
+let Application = mongooose.model('Application', applicationSchema);
+module.exports = Application;
