@@ -56,7 +56,7 @@
         </div>
       </div>
     </div>
-    <button *ngIf="application" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newEventModal">Bewerben</button>
+    <button *ngIf="application" type="button" class="btn btn-secondary" (click)="apply()" data-toggle="modal" data-target="#newEventModal">Bewerben</button>
     <button *ngIf="application" (click)="deleteSelection()" type="button" class="btn btn-secondary" data-toggle="modal" data-target="#newEventModal">Löschen</button>
     <full-calendar #calendar deepChangeDetection="true" defaultView="timeGridWeek" [weekends]="false" [plugins]="calendarPlugins" [minTime]="'08:00'" editable="true" eventStartEditable="true" eventResizableFromStart="true" eventDurationEditable="true" contentHeight="auto"
                     [maxTime]="'18:00'" [events]="calendarEvents" (datesRender)="weekClicked()" (eventClick)="eventClicked($event)" data-toggle="modal" data-target="#eventModal"></full-calendar>

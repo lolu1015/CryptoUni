@@ -159,6 +159,10 @@ export class TimetableComponent implements OnInit {
   setAdditionalModule(module) {
     loadAddtionalModule = module
   }
+
+  apply() {
+
+  }
 }
 
 
