@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import { HttpClient } from '@angular/common/http';
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 const app = express();
 const router = express.Router();
 let Student = require('./Model/student.ts')
@@ -87,6 +90,46 @@ router.route('/getapplication').post((req, res) => {
       console.log("success")
       console.log("HIER: " + JSON.stringify(newApplication))
       //CamundaCall
+
+      // Sending and receiving data in JSON format using POST method
+      //
+      var xhr = new XMLHttpRequest();
+      var url = "http://localhost:7070/engine-rest/message";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+              var json = JSON.parse(xhr.responseText);
+              console.log('AHHHAA: ');
+          }
+      };
+      var data = JSON.stringify({
+        "messageName" : "camundaEndMessageEvent",  
+        "processVariables" : {
+            "moduleNew__id" : {"value" : newApplication.module[0]._id, "type": "String"},
+            "moduleNew_name" : {"value" : newApplication.module[0].name, "type": "String"},
+            "moduleNewId" : {"value" : newApplication.module[0].id, "type": "String"},
+            "moduleNew_professor" : {"value" : newApplication.module[0].professor, "type": "String"},
+            "student__id" : {"value" : newApplication.student[0]._id, "type": "String"},
+            "student_name" : {"value" : newApplication.student[0].name, "type": "String"},
+            "studentId" : {"value" : newApplication.student[0].id, "type": "String"},
+            "status" : {"value" : newApplication.status, "type": "String"},
+            "moduleStandard__id" : {"value" : newApplication.student[0].modules[0]._id, "type": "String"},
+            "moduleStandard_name" : {"value" : newApplication.student[0].modules[0].name, "type": "String"},
+            "moduleStandardId" : {"value" : newApplication.student[0].modules[0].id, "type": "String"},
+            "moduleStandard_professor" : {"value" : newApplication.student[0].modules[0].professor, "type": "String"},
+            "moduleStandard_description" : {"value" : newApplication.student[0].modules[0].description, "type": "String"},
+          }
+         
+        });
+        console.log("Vergleiche: " + newApplication);
+        console.log("Vergleiche: " + JSON.stringify(newApplication.student[0].modules));
+
+      xhr.send(data);
+      xhr.onloadend = function () {
+        console.log("done")
+      };
+      
     }
   })}});
   ;res.send("IrgendeinString")
@@ -237,7 +280,8 @@ let newStudent = new Student({
       name: "SSD",
       id: "123",
       professor: "Test",
-      description: "test"
+      description: "test",
+      grade: 1.0
     })
   ]
 })
@@ -246,7 +290,8 @@ let newModule = new Module({
   name: "SWE",
   id: "SWE",
   professor: "Test",
-  description: "test"
+  description: "test",
+  grade: 3.7
 })
 
 

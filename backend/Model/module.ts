@@ -3,7 +3,8 @@ let moduleSchema = mongose.Schema({
   name: String,
   id: String,
   professor: String,
-  description: String
+  description: String,
+  grade: Number
 });
 
 let Module = mongose.model('Module', moduleSchema);
