@@ -4,7 +4,8 @@ let moduleSchema = mongose.Schema({
   id: String,
   professor: String,
   description: String,
-  module: String
+  module: String,
+  grade: Number
 });
 
 let Module = mongose.model('Module', moduleSchema);

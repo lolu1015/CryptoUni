@@ -3,6 +3,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import {SHA256, enc} from "crypto-js";
+import { HttpClient } from '@angular/common/http';
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 const app = express();
 const router = express.Router();
 const https = require('https')
@@ -228,32 +231,63 @@ router.route('/apply').post(authenticateToken, (req, res) => {
   let newModule = new Module;
   let newUser = new User;
 
-  Module.findOne({id: req.body['moduleId']}, function (err, module) {
-    if (module) {
-      newModule = module
-      User.findOne({id: req.body['id']}, function (err, user) {
-        if (user) {
-          newUser = user
-          newApplication = new Application({
-            id: "fdsgst54sdf4w5df45ds",
-            status: "warten",
-            module: [newModule],
-            student: [newUser],
-            responsible: newModule.professor
-          });
-          newApplication.save((err, result) => {
-            if (err) {
-              console.log(err)
-            } else {
-              //CamundaCall
-            }
-          })
+  Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
+    User.findOne({id: 'test'}, function(err, student) {if(student) {newUser = student
+      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
+      newApplication.save((err, result) => {
+        if (err) {
+          console.log(err)
         }
-      });
-      ;res.send("IrgendeinString")
-    }
-  });
+        else {
+          console.log("success")
+          console.log("HIER: " + JSON.stringify(newApplication))
+          //CamundaCall
+
+          // Sending and receiving data in JSON format using POST method
+          //
+          var xhr = new XMLHttpRequest();
+          var url = "http://localhost:7070/engine-rest/message";
+          xhr.open("POST", url, true);
+          xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              var json = JSON.parse(xhr.responseText);
+              console.log('AHHHAA: ');
+            }
+          };
+          var data = JSON.stringify({
+            "messageName" : "camundaEndMessageEvent",
+            "processVariables" : {
+              "moduleNew__id" : {"value" : newApplication.module[0]._id, "type": "String"},
+              "moduleNew_name" : {"value" : newApplication.module[0].name, "type": "String"},
+              "moduleNewId" : {"value" : newApplication.module[0].id, "type": "String"},
+              "moduleNew_professor" : {"value" : newApplication.module[0].professor, "type": "String"},
+              "student__id" : {"value" : newApplication.student[0]._id, "type": "String"},
+              "student_name" : {"value" : newApplication.student[0].name, "type": "String"},
+              "studentId" : {"value" : newApplication.student[0].id, "type": "String"},
+              "status" : {"value" : newApplication.status, "type": "String"},
+              "moduleStandard__id" : {"value" : newApplication.student[0].modules[0]._id, "type": "String"},
+              "moduleStandard_name" : {"value" : newApplication.student[0].modules[0].name, "type": "String"},
+              "moduleStandardId" : {"value" : newApplication.student[0].modules[0].id, "type": "String"},
+              "moduleStandard_professor" : {"value" : newApplication.student[0].modules[0].professor, "type": "String"},
+              "moduleStandard_description" : {"value" : newApplication.student[0].modules[0].description, "type": "String"},
+            }
+
+          });
+          console.log("Vergleiche: " + newApplication);
+          console.log("Vergleiche: " + JSON.stringify(newApplication.student[0].modules));
+
+          xhr.send(data);
+          xhr.onloadend = function () {
+            console.log("done")
+          };
+
+        }
+      })}});
+    ;res.send("IrgendeinString")
+  }});
 });
+
 
 router.route('/getApplications').get(authenticateToken, (req, res) => {
   console.log('triggered')
@@ -463,7 +497,8 @@ let newUser = new User({
       name: "Produktionsorganisation",
       id: "123",
       professor: "Test",
-      description: "test"
+      description: "test",
+      grade: 1.0
     })
   ],
   role: "student"
@@ -477,119 +512,132 @@ newUser.save((err, succ) => {
   }
 })
 
-let newAdmin = new User({
-  name: "admin",
-  id: "admin",
-  password: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-  modules: [],
-  role: "admin"
-})
-
-newAdmin.save((err, succ) => {
-  if (err) {
-    console.log(err)
-  } else {
-    console.log('succ')
-  }
-})
-
-
-Module.deleteMany({}).exec()
-
-let allModules = [
-  new Module({
-    name: "Wissenschaftliches Arbeiten",
-    id: '3123123',
-    module: 'Wissenschaftliches Arbeiten',
-    description: "Beispielbeschreibung für WiA"
-  }),
-  new Module({
-    name: "Service & Solution Design",
-    id: '123131',
-    module: 'Software Design',
-    description: "Beispielbeschreibung SSD"
-  }),
-  new Module({
-    name: "Process Design & Impl.",
-    id: '123123',
-    module: 'Software Design',
-    description: "Beispielbeschreibung PDI"
-  }),
-  new Module({
-    name: "Data Mining",
-    id: '1231',
-    module: 'Data Science',
-    description: "Data Mining Description"
-  }),
-  new Module({
-    name: "Data Analytics",
-    id: '123323',
-    module: 'Data Science',
-    description: "Data Analytics Description"
-  }),
-  new Module({
-    name: "Big Data",
-    id: '13123',
-    module: 'Data Science',
-    description: "Big Data Description"
+  let newModule = new Module({
+    name: "SWE",
+    id: "SWE",
+    professor: "Test",
+    description: "test",
+    grade: 3.7
   })
-]
 
-allModules.forEach(module => {
-  module.save((err, succ) => {
+  newModule.save((err, succ) => {
+    }
+  )
+
+  let newAdmin = new User({
+    name: "admin",
+    id: "admin",
+    password: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    modules: [],
+    role: "admin"
+  })
+
+  newAdmin.save((err, succ) => {
     if (err) {
       console.log(err)
     } else {
       console.log('succ')
     }
   })
-})
-
-Application.deleteMany({}).exec()
-
-let testApplication1 = new Application({
-  id: 123,
-  status: "pending",
-  module: [new Module({
-    name: "Big Data",
-    id: '13123',
-    module: 'Data Science',
-    description: "Big Data Description"
-  })],
-  student: [new User({
-    name: "Bobby Lee",
-    id: "bo1021"
-  })],
-  responsible: "some prof",
-})
-
-let testApplication2 = new Application({
-  id: 123,
-  status: "pending",
-  module: [new Module({
-    name: "Data Analytics",
-    id: '123323',
-    module: 'Data Science',
-    description: "Data Analytics Description"
-  })],
-  student: [new User({
-    name: "Bobby Lee",
-    id: "bo1021"
-  })],
-  responsible: "some prof",
-})
 
 
-testApplication1.save((err, succ) => {
-  if (succ)
-    console.log('appl succ')
-})
+  Module.deleteMany({}).exec()
 
-testApplication2.save((err, succ) => {
-  if (succ)
-    console.log('appl succ')
-})
+  let allModules = [
+    new Module({
+      name: "Wissenschaftliches Arbeiten",
+      id: '3123123',
+      module: 'Wissenschaftliches Arbeiten',
+      description: "Beispielbeschreibung für WiA"
+    }),
+    new Module({
+      name: "Service & Solution Design",
+      id: '123131',
+      module: 'Software Design',
+      description: "Beispielbeschreibung SSD"
+    }),
+    new Module({
+      name: "Process Design & Impl.",
+      id: '123123',
+      module: 'Software Design',
+      description: "Beispielbeschreibung PDI"
+    }),
+    new Module({
+      name: "Data Mining",
+      id: '1231',
+      module: 'Data Science',
+      description: "Data Mining Description"
+    }),
+    new Module({
+      name: "Data Analytics",
+      id: '123323',
+      module: 'Data Science',
+      description: "Data Analytics Description"
+    }),
+    new Module({
+      name: "Big Data",
+      id: '13123',
+      module: 'Data Science',
+      description: "Big Data Description"
+    })
+  ]
+
+  allModules.forEach(module => {
+    module.save((err, succ) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log('succ')
+      }
+    })
+  })
 
 
-app.use('/', router);
-app.listen(4000, () => console.log(`Express server running on port 4000`));
+  Application.deleteMany({}).exec()
+
+  let testApplication1 = new Application({
+    id: 123,
+    status: "pending",
+    module: [new Module({
+      name: "Big Data",
+      id: '13123',
+      module: 'Data Science',
+      description: "Big Data Description"
+    })],
+    student: [new User({
+      name: "Bobby Lee",
+      id: "bo1021"
+    })],
+    responsible: "some prof",
+  })
+
+  let testApplication2 = new Application({
+    id: 123,
+    status: "pending",
+    module: [new Module({
+      name: "Data Analytics",
+      id: '123323',
+      module: 'Data Science',
+      description: "Data Analytics Description"
+    })],
+    student: [new User({
+      name: "Bobby Lee",
+      id: "bo1021"
+    })],
+    responsible: "some prof",
+  })
+
+
+  testApplication1.save((err, succ) => {
+    if (succ)
+      console.log('appl succ')
+  })
+
+  testApplication2.save((err, succ) => {
+    if (succ)
+      console.log('appl succ')
+  })
+
+
+  app.use('/', router);
+  app.listen(4000, () => console.log(`Express server running on port 4000`));

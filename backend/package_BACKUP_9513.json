@@ -24,8 +24,11 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.18"
+=======
     "mongoose": "^5.9.18",
     "xmlhttprequest": "^1.8.0"
+>>>>>>> 04da81b9eeb603b3b42ef6c8091f68bb4415f528
   },
   "description": ""
 }
