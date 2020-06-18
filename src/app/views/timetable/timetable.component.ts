@@ -95,7 +95,7 @@ export class TimetableComponent implements OnInit {
   }
 
   setSearchText() {
-    savedTitle = this.event.event.extendedProps.module;
+    savedTitle = this.event.event.title;
   }
 
   dismissSearchText() {
@@ -144,7 +144,7 @@ export class TimetableComponent implements OnInit {
   }
 
   reloadData() {
-    this.service.getICALModule(this.userService.getId(), loadAddtionalModule).subscribe(data => {
+    this.service.getICALModule(loadAddtionalModule).subscribe(data => {
       this.data = data
       this.weekClicked()
     })
@@ -161,9 +161,7 @@ export class TimetableComponent implements OnInit {
   }
 
   apply() {
-    console.log("apply wurde getriggert!!")
     this.service.pushApplication(this.userService.getId(), loadAddtionalModule).subscribe();
-    console.log("apply wurde getriggert danach!!")
   }
 }
 

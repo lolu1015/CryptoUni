@@ -16,11 +16,27 @@ export class HeaderComponent implements OnInit {
   }
 
   isLoggedIn() {
-    return this.loginService.isLoggedIn();
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return false;
+    }
+    return true;
+  }
+
+  isAdmin() {
+    if (JSON.parse(localStorage.getItem('user')).role === 'admin') {
+      return true
+    } else {
+      return false
+    }
   }
 
   logout() {
     this.loginService.logout();
+  }
+
+  getName() {
+    return localStorage.getItem('username')
   }
 
 }

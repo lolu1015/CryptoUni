@@ -15,10 +15,16 @@ import { StudiesOverviewComponent } from './views/studies-overview/studies-overv
 import { TakenCoursesComponent } from './views/taken-courses/taken-courses.component';
 import { TimetableComponent } from './views/timetable/timetable.component';
 import { ExploreComponent } from './views/explore/explore.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 
 import { ChatModule } from '@progress/kendo-angular-conversational-ui';
 import {ChatService} from "./views/explore/chat.service";
+import {PdfViewerModule} from "ng2-pdf-viewer";
+import {AuthGuardService} from "../guards/auth-guard.service";
+import {TokenInterceptor} from "../guards/authInterceptor";
+import { AccessdeniedComponent } from './views/accessdenied/accessdenied.component';
+import { ApplicationsComponent } from './views/applications/applications.component';
+import { ApplOverviewComponent } from './views/appl-overview/appl-overview.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +38,9 @@ import {ChatService} from "./views/explore/chat.service";
     TakenCoursesComponent,
     TimetableComponent,
     ExploreComponent,
+    AccessdeniedComponent,
+    ApplicationsComponent,
+    ApplOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,9 +48,10 @@ import {ChatService} from "./views/explore/chat.service";
     FormsModule,
     FullCalendarModule,
     HttpClientModule,
-    ChatModule
+    ChatModule,
+    PdfViewerModule
   ],
-  providers: [ChatService],
+  providers: [ChatService, AuthGuardService, {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

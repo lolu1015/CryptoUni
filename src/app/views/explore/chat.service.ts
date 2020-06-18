@@ -1,7 +1,7 @@
 import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-// Mock remote service
+// Mock KI / Chatbot service
 
 @Injectable()
 export class ChatService {
@@ -26,7 +26,6 @@ export class ChatService {
         answer = "Meine Empfehlungen für dich kannst du dir in der Liste anschauen"
         this.searchString = "Data"
     }
-
     setTimeout(
       () => this.responses.next(answer),
       700
