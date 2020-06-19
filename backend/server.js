@@ -355,7 +355,7 @@ function getAdditionalICALString(name) {
         "LOCATION:\n" +
         "SEQUENCE:0\n" +
         "STATUS:CONFIRMED\n" +
-        "SUMMARY:SWA\n" +
+        "SUMMARY:WiA\n" +
         "COLOR:RED\n" +
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
@@ -411,18 +411,18 @@ function getAdditionalICALString(name) {
         "DTSTAMP:20200303T221236Z\n" +
         "UID:tgh9qho17b07pk2n2ji3gluans@google.com\n" +
         "CREATED:20200303T221236Z\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Process Design & Impl.\n" +
         "COLOR:RED\n" +
         "LAST-MODIFIED:20200303T221236Z\n" +
         "LOCATION:\n" +
         "SEQUENCE:0\n" +
         "STATUS:CONFIRMED\n" +
-        "SUMMARY:Data Analytics\n" +
+        "SUMMARY:PDI\n" +
         "COLOR:RED\n" +
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
         "ACTION:EMAIL\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Process Design & Impl.\n" +
         "SUMMARY:Alarm notification\n" +
         "ATTENDEE:mailto:calmozilla1@gmail.com\n" +
         "TRIGGER:-P0DT0H30M0S\n" +
@@ -453,7 +453,7 @@ function getAdditionalICALString(name) {
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
         "ACTION:EMAIL\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Big Data\n" +
         "SUMMARY:Alarm notification\n" +
         "ATTENDEE:mailto:calmozilla1@gmail.com\n" +
         "TRIGGER:-P0DT0H30M0S\n" +
