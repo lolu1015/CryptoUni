@@ -9,6 +9,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const app = express();
 const router = express.Router();
 const https = require('https')
+
 const jwt = require("jsonwebtoken");
 const privateKey = "09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611"
 
@@ -229,12 +230,10 @@ router.route('/apply').post(authenticateToken, (req, res) => {
   let newApplication = new Application;
   let newModule = new Module;
   let newUser = new User;
-  console.log("SS1")
 
   Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
-    console.log("SS2")
-    User.findOne({id: req.body['id']}, function(err, student) {if(student) {newUser = student
-      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newUser], responsible: newModule.professor});
+    User.findOne({id: 'test'}, function(err, student) {if(student) {newUser = student
+      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
       newApplication.save((err, result) => {
         if (err) {
           console.log(err)
@@ -259,7 +258,6 @@ router.route('/apply').post(authenticateToken, (req, res) => {
           var data = JSON.stringify({
             "messageName" : "camundaEndMessageEvent",
             "processVariables" : {
-              "application_id" : {"value" : newApplication.id, "type": "String"},
               "moduleNew__id" : {"value" : newApplication.module[0]._id, "type": "String"},
               "moduleNew_name" : {"value" : newApplication.module[0].name, "type": "String"},
               "moduleNewId" : {"value" : newApplication.module[0].id, "type": "String"},
@@ -305,20 +303,6 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
   })
 })
 
-router.route('/sendStatus').post((req, res) => {
-
-  res.set('Content-Type', 'text/html');
-  res.send("IrgendeinString");
-
-  app.use(bodyParser.json());
-
-  //console.log('sendStatus!' + req.body);
-
-  console.log('sendStatus!' + JSON.stringify(req.body));
-  console.log('sendStatus!' + JSON.stringify(req.url));
-  //console.log('sendStatus!' + JSON.stringify(req.status));
-  
-})
 
 //dummy ical strings for previewing it in a current timetable
 function getAdditionalICALString(name) {
