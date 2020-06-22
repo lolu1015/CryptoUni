@@ -13,7 +13,7 @@ export class ApplicationsComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(JSON.parse(localStorage.getItem('user')).id)
-    this.service.getApplications('bo1021').subscribe(items => {
+    this.service.getApplications(JSON.parse(localStorage.getItem('user'))['id']).subscribe(items => {
       console.log('ITEMS!  ' + items)
       console.log(JSON.stringify(items[0]))
       console.log('scc')

@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {FullCalendarComponent} from "@fullcalendar/angular";
 import {DatabaseService} from "../../service";
 import {LoginComponent} from "../login/login.component";
+import {load} from "@progress/kendo-angular-intl";
 
 let savedTitle = ""
 let loadAddtionalModule = ""
@@ -78,7 +79,8 @@ export class TimetableComponent implements OnInit {
     console.log("§§§ " +  loadAddtionalModule)
     if (loadAddtionalModule.length > 0) {
       this.application = true
-      this.reloadData()
+      //this.reloadData()
+      this.init()
     } else {
       this.application = false
       this.init()
@@ -96,15 +98,12 @@ export class TimetableComponent implements OnInit {
 
   setSearchText() {
     savedTitle = this.event.event.title;
+    localStorage.setItem('searchString', savedTitle)
   }
 
   dismissSearchText() {
     this.eventTitle = '';
     savedTitle = "";
-  }
-
-  setString() {
-    return savedTitle
   }
 
   addEvent() {
@@ -296,6 +295,17 @@ function merge_events(e, f) {
 }
 
 function fc_event(event, event_callback) {
+
+  if(loadAddtionalModule.length > 0) {
+    console.log('ENTERED')
+    console.log(loadAddtionalModule)
+    console.log(event.getFirstPropertyValue('summary'))
+    console.log(event.getFirstPropertyValue('summary').includes(loadAddtionalModule))
+  }
+
+
+
+
   let e = {
     title:event.getFirstPropertyValue('summary'),
     extendedProps: {module: event.getFirstPropertyValue('description')},
@@ -303,7 +313,7 @@ function fc_event(event, event_callback) {
     //uncomment if you want to use click on date as forwarding-link
     //url:event.getFirstPropertyValue('url'),
     id:event.getFirstPropertyValue('uid'),
-    color: event.getFirstPropertyValue('color'),
+    color: (loadAddtionalModule.length > 0 && event.getFirstPropertyValue('summary').includes(loadAddtionalModule)) ? 'RED' : event.getFirstPropertyValue('color'),
 
     className:['event-'+an_filter(event.getFirstPropertyValue('uid'))],
     allDay:false
@@ -318,5 +328,10 @@ function fc_event(event, event_callback) {
   } catch (TypeError) {
     e['allDay'] = true
   }
-  event_callback(e)
+
+  if(JSON.parse(localStorage.getItem('user')).currentModules.map(mod => " " + mod.name).indexOf(e.title) !== -1 || (loadAddtionalModule.length >  0 &&e.title.indexOf(loadAddtionalModule) !== -1)) {
+    event_callback(e)
+  } else {
+
+  }
 }
