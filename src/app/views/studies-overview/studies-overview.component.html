@@ -2,10 +2,7 @@
   <div class="card-header">
     <ul class="nav nav-tabs card-header-tabs">
       <li class="nav-item">
-        <a class="nav-link active" routerLink="/studiesoverview">Offene Module</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/takencourses">Bereits Belegte Module</a>
+        <a class="nav-link active" routerLink="/studiesoverview">Meine Module</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/timetable">Stundenplan</a>
@@ -14,10 +11,43 @@
   </div>
 
   <div class="card-body">
-    <h3>Semester 6</h3>
-    <p>IBSYS2</p>
-    <h3>Semester 7</h3>
-    <p>Produktionsorganisation</p>
+    <a>Modulwahl</a>
+    <li *ngFor="let module of modules; index as i; first as isFirst" (click)="show(module)" data-toggle="modal" data-target="#newEventModal">
+      {{module.name}}
+    </li>
   </div>
 
+  <div class="modal fade bd-example-modal-lg" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" size="xl">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="newEventModalLabel">{{this.newModuleName}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <pdf-viewer [src]="modulHandbuch"
+                      [render-text]="true"
+                      style="display: block;"
+          ></pdf-viewer>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Schließen</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Belegen</button>
+          <button type="button" routerLink="/explore" data-dismiss="modal" (click)="setModule()" class="btn btn-primary">Suchen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <pdf-viewer *ngIf="showPDF" [src]="modulHandbuch"
+              [render-text]="true"
+              style="display: block;"
+              zoom="0.000001"
+  ></pdf-viewer>
+  <pdf-viewer *ngIf="!showPDF" [src]="modulHandbuch"
+              [render-text]="true"
+              style="display: block;"
+              zoom="0.000001"
+  ></pdf-viewer>
 </div>

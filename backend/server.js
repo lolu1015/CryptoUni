@@ -35,10 +35,6 @@ function authenticateToken(req, res, next) {
 
 
 
-
-
-
-
 let User = require('./Model/user.ts')
 let Module = require('./Model/module.ts')
 let Application = require('./Model/application.ts')
@@ -59,6 +55,46 @@ crawler("https://www.hs-karlsruhe.de/fileadmin/hska/IWI/PDF/Modulbeschreibungen/
   // handle response
   console.log(response.text);
 });*/
+
+router.route('/getUserData').get(authenticateToken, (req, res) => {
+  User.findOne({id: req.query.id}, function(err, user) {
+    if(user) {
+      Application.find({student: {$elemMatch: {id: req.query.id}}}, function (err, appl) {
+        if (appl) {
+          res.status(200)
+          let allData = {
+            user: user,
+            application: appl
+          }
+          res.send(allData)
+        };
+      })
+    }
+  })
+})
+
+router.route('/getSuggestions').get(authenticateToken, (req, res) => {
+  console.log(req.query.id)
+  User.findOne({id: req.query.id}, function(err, user) {
+    if(user) {
+      console.log('Test ' + suggestModules(user.id, function(result) {
+        console.log('res' + res)
+        res.json(result)
+      }))
+    }
+  })
+})
+
+// dummy function which returns dummy suggestions for a user
+function suggestModules(id, cb) {
+  const suggestedModules = ['123131', '123123', '1231', '13123', '2222', '1111'];
+    Module.find({id: { $in: suggestedModules }}, function(err, res) {
+      if(res) {
+        return cb(res)
+      } else {
+      }
+    })
+}
 
 // returns descriptions of modules as pdf by the id of module
 router.route('/pdf').get(authenticateToken, (req, res) => {
@@ -87,6 +123,24 @@ router.route('/pdf').get(authenticateToken, (req, res) => {
     case "13323":
       path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WII_M_SPO_07/20161219_WII_M230_V1_Data-Science.pdf"
       break;
+    case "1111":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WIIB_SPO_V6/20160407_WIIB_B404_V6_Marketing.pdf"
+      break;
+    case "2222":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WII_M_SPO_07/20161219_WII_M240_V1_Unternehmenssteuerung.pdf"
+      break;
+    case "3333":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WIIB_SPO_V6/20160407_WIIB_B604_V6_Finanzmanagement.pdf"
+      break;
+    case "4444":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WIIB_SPO_V6/20160407_WIIB_B103_V6_AllgemeineBetriebswirtschaftslehre.pdf"
+      break;
+    case "5555":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WIIB_SPO_V6/20160407_WIIB_B402_V6_SoftwareEngineering.pdf"
+      break;
+    case "6666":
+      path = "/fileadmin/hska/IWI/PDF/Modulbeschreibungen/WIIB_SPO_V6/20160407_WIIB_B302_V6_Softwarearchitektur.pdf"
+      break;
   }
 
 
@@ -95,7 +149,7 @@ router.route('/pdf').get(authenticateToken, (req, res) => {
     },
     function (response) {
       response.on('data', function (chunk) {
-        console.log('BODY: ' + chunk);
+        //console.log('BODY: ' + chunk);
         data.push(chunk)
       });
 
@@ -156,20 +210,27 @@ router.route('/ical').get(authenticateToken, (req, res) => {
           function (response) {
             response.setEncoding('utf8');
             response.on('data', function (chunk) {
-              console.log('BODY: ' + chunk);
+              //console.log('BODY: ' + chunk);
               data += chunk
             });
 
             response.on('end', function(){
-              res.set('Content-Type', 'text/calendar;charset=utf-8');
-              res.set('Content-Disposition', 'attachment; filename="cryptoCalendar.ics"');
-              res.send(data);
-            })
 
+                  console.log(data)
+
+                  res.set('Content-Type', 'text/calendar;charset=utf-8');
+                  res.set('Content-Disposition', 'attachment; filename="cryptoCalendar.ics"');
+                  res.send(data);
+
+
+            })
           });
         request.end();
 });
 
+
+//no longer required
+/*
 //returns ical file of specific module + ical file with all other visited modules
 router.route('/geticalmodule').get(authenticateToken, (req, res) => {
 
@@ -194,26 +255,28 @@ router.route('/geticalmodule').get(authenticateToken, (req, res) => {
         });
       request.end();
 
-});
+});*/
 
 // returns all modules from db
 router.route('/getModules').get(authenticateToken, (req, res) => {
   Module.find((err, versions) => {
     if (err)
-      console.log(err);
+      console.log('err ' + err);
     else res.json(versions);
   });
 })
 
 // returns 200 if login successfull otherwise 401
 router.route('/login').post((req, res) => {
+  console.log(req.body['hash'])
+  console.log(req.body['id'])
   User.findOne({id: req.body['id']}, function(err, user) {
     if(err) {
       res.status('500').send("Internal Error");
     } else {
       if(user && req.body['hash'] === user.password) {
         let token = generateAccessToken({id: req.body['id']})
-        console.log('your token ' + token)
+        console.log('your user ' + user)
         res.status('200').json({token: token, user: user});
       } else {
         res.status('401').send("Wrong password");
@@ -303,7 +366,7 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
   })
 })
 
-
+/*
 //dummy ical strings for previewing it in a current timetable
 function getAdditionalICALString(name) {
   let retString = ""
@@ -355,7 +418,7 @@ function getAdditionalICALString(name) {
         "LOCATION:\n" +
         "SEQUENCE:0\n" +
         "STATUS:CONFIRMED\n" +
-        "SUMMARY:SWA\n" +
+        "SUMMARY:WiA\n" +
         "COLOR:RED\n" +
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
@@ -411,18 +474,18 @@ function getAdditionalICALString(name) {
         "DTSTAMP:20200303T221236Z\n" +
         "UID:tgh9qho17b07pk2n2ji3gluans@google.com\n" +
         "CREATED:20200303T221236Z\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Process Design & Impl.\n" +
         "COLOR:RED\n" +
         "LAST-MODIFIED:20200303T221236Z\n" +
         "LOCATION:\n" +
         "SEQUENCE:0\n" +
         "STATUS:CONFIRMED\n" +
-        "SUMMARY:Data Analytics\n" +
+        "SUMMARY:PDI\n" +
         "COLOR:RED\n" +
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
         "ACTION:EMAIL\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Process Design & Impl.\n" +
         "SUMMARY:Alarm notification\n" +
         "ATTENDEE:mailto:calmozilla1@gmail.com\n" +
         "TRIGGER:-P0DT0H30M0S\n" +
@@ -453,7 +516,7 @@ function getAdditionalICALString(name) {
         "TRANSP:OPAQUE\n" +
         "BEGIN:VALARM\n" +
         "ACTION:EMAIL\n" +
-        "DESCRIPTION:Data Analytics\n" +
+        "DESCRIPTION:Big Data\n" +
         "SUMMARY:Alarm notification\n" +
         "ATTENDEE:mailto:calmozilla1@gmail.com\n" +
         "TRIGGER:-P0DT0H30M0S\n" +
@@ -468,7 +531,7 @@ function getAdditionalICALString(name) {
   }
   return retString
 }
-
+*/
 
 
 
@@ -501,6 +564,44 @@ let newUser = new User({
       grade: 1.0
     })
   ],
+  currentModules: [
+    new Module({
+      name: "Service & Solution Design",
+      id: '123131',
+      module: 'Software Design',
+      description: "Beispielbeschreibung SSD"
+    }),
+    new Module({
+      name: "Proces.Design & Impl.",
+      id: '123123',
+      module: 'Software Design',
+      description: "Beispielbeschreibung PDI"
+    }),
+    new Module({
+      name: "Data Science",
+      id: '1231',
+      module: 'Data Science',
+      description: "Data Mining Description"
+    }),
+    new Module({
+      name: "Marketing",
+      id: '1111',
+      module: 'BWL',
+      description: "Marketing Description"
+    }),
+    new Module({
+      name: "Unternehmenssteuerung",
+      id: '2222',
+      module: 'BWL',
+      description: "Unternehmenssteuerung Description"
+    }),
+    new Module({
+      name: "SWArch.",
+      id: '6666',
+      module: 'Software Design',
+      description: "SWA Description"
+    }),
+  ],
   role: "student"
 })
 
@@ -512,17 +613,18 @@ newUser.save((err, succ) => {
   }
 })
 
-  let newModule = new Module({
+  /*let newModule = new Module({
     name: "SWE",
     id: "SWE",
     professor: "Test",
     description: "test",
+    module: "Software Engineering",
     grade: 3.7
   })
 
   newModule.save((err, succ) => {
     }
-  )
+  )*/
 
   let newAdmin = new User({
     name: "admin",
@@ -545,41 +647,59 @@ newUser.save((err, succ) => {
 
   let allModules = [
     new Module({
-      name: "Wissenschaftliches Arbeiten",
-      id: '3123123',
-      module: 'Wissenschaftliches Arbeiten',
-      description: "Beispielbeschreibung für WiA"
-    }),
-    new Module({
       name: "Service & Solution Design",
       id: '123131',
       module: 'Software Design',
       description: "Beispielbeschreibung SSD"
     }),
     new Module({
-      name: "Process Design & Impl.",
+      name: "Proces.Design & Impl.",
       id: '123123',
       module: 'Software Design',
       description: "Beispielbeschreibung PDI"
     }),
     new Module({
-      name: "Data Mining",
+      name: "Data Science",
       id: '1231',
       module: 'Data Science',
       description: "Data Mining Description"
     }),
     new Module({
-      name: "Data Analytics",
-      id: '123323',
-      module: 'Data Science',
-      description: "Data Analytics Description"
+      name: "Marketing",
+      id: '1111',
+      module: 'BWL',
+      description: "Marketing Description"
     }),
     new Module({
-      name: "Big Data",
-      id: '13123',
-      module: 'Data Science',
-      description: "Big Data Description"
-    })
+      name: "Unternehmenssteuerung",
+      id: '2222',
+      module: 'BWL',
+      description: "Unternehmenssteuerung Description"
+    }),
+    new Module({
+      name: "Finanzmanagement",
+      id: '3333',
+      module: 'BWL',
+      description: "Finanzmanagement Description"
+    }),
+    new Module({
+      name: "Allg.BWL",
+      id: '4444',
+      module: 'BWL',
+      description: "Allg. BWL Description"
+    }),
+    new Module({
+      name: "SWE",
+      id: '5555',
+      module: 'Software Design',
+      description: "SWE Description"
+    }),
+    new Module({
+      name: "SWArch.",
+      id: '6666',
+      module: 'Software Design',
+      description: "SWA Description"
+    }),
   ]
 
   allModules.forEach(module => {
@@ -641,3 +761,4 @@ newUser.save((err, succ) => {
 
   app.use('/', router);
   app.listen(4000, () => console.log(`Express server running on port 4000`));
+

@@ -4,6 +4,7 @@ let userSchema = mongoose.Schema({
   id: String,
   password: String,
   modules: [],
+  currentModules: [],
   role: String
 }, { collection: 'users' });
 let User = mongoose.model('User', userSchema);

@@ -90,13 +90,17 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     //if called from timetable module pre-set search string
-    this.searchString = this.timeTable.setString()
+    this.searchString = localStorage.getItem('searchString')
     this.service.getModules().subscribe((res: []) => {
       this.modules = res
     })
   }
 
   filteredModules() {
+
+    console.log(this.modules)
+
+
     if (this.searchString.length === 0)
       return []
     else
@@ -113,13 +117,11 @@ export class ExploreComponent implements OnInit {
       //needed to force reload to trigger loading of pdf viewer
       this.showPDF ? this.showPDF = false : true;
     })
-
-
   }
 
   //triggers preview of new module in current timetable (displayed in red)
   showInCalendar() {
-    this.timeTable.setAdditionalModule(this.newModule)
+    this.timeTable.setAdditionalModule(this.newModuleName)
   }
 
 }

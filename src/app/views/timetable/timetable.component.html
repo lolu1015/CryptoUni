@@ -5,9 +5,6 @@
         <a class="nav-link" routerLink="/studiesoverview">Offene Module</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/takencourses">Bereits Belegte Module</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link active" routerLink="/timetable">Stundenplan</a>
       </li>
     </ul>
@@ -56,7 +53,7 @@
         </div>
       </div>
     </div>
-    <button *ngIf="application" type="button" class="btn btn-secondary" (click)="apply()">Bewerben</button>
+    <button *ngIf="application" type="button" class="btn btn-secondary" style="margin-right: 10px" (click)="apply()">Bewerben</button>
     <button *ngIf="application" (click)="deleteSelection()" type="button" class="btn btn-secondary">Löschen</button>
     <full-calendar #calendar deepChangeDetection="true" defaultView="timeGridWeek" [weekends]="false" [plugins]="calendarPlugins" [minTime]="'08:00'" editable="true" eventStartEditable="true" eventResizableFromStart="true" eventDurationEditable="true" contentHeight="auto"
                     [maxTime]="'18:00'" [events]="calendarEvents" (datesRender)="weekClicked()" (eventClick)="eventClicked($event)" data-toggle="modal" data-target="#eventModal"></full-calendar>

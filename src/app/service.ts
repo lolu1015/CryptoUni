@@ -13,7 +13,11 @@ export class DatabaseService {
   }
 
   getICAL(id) {
-    return this.httpClient.get(`${this.uri}/ical`, {responseType: 'text'});
+    return this.httpClient.get(`${this.uri}/ical?id=${id}`, {responseType: 'text'});
+  }
+
+  getSuggestions(id) {
+    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`);
   }
 
   getICALModule(id) {
@@ -22,6 +26,10 @@ export class DatabaseService {
 
   getModules() {
     return this.httpClient.get(`${this.uri}/getModules`);
+  }
+
+  getUserData(id) {
+    return this.httpClient.get(`${this.uri}/getUserData?id=${id}`, {responseType: 'text'});
   }
 
   login(id, hash) {
