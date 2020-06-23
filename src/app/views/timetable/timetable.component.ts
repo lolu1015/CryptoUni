@@ -331,6 +331,9 @@ function fc_event(event, event_callback) {
     e['allDay'] = true
   }
 
+  console.log(JSON.parse(localStorage.getItem('user')).currentModules.map(mod => " " + mod.name))
+
+
   if(JSON.parse(localStorage.getItem('user')).currentModules.map(mod => " " + mod.name).indexOf(e.title) !== -1 || (loadAddtionalModule.length >  0 &&e.title.indexOf(loadAddtionalModule) !== -1)) {
     event_callback(e)
   } else {

@@ -15,6 +15,10 @@ export class ApplicationsComponent implements OnInit {
     console.log(JSON.parse(localStorage.getItem('user')).id)
     this.service.getApplications(JSON.parse(localStorage.getItem('user'))['id']).subscribe(items => {
       let json = JSON.parse(items.body)
+      console.log(items)
+      console.log(items.body)
+      console.log('User ' + json.user)
+      console.log(JSON.stringify(json.user))
       localStorage.setItem('user', JSON.stringify(json.user))
       this.data = json.appl
     })

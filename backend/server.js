@@ -79,7 +79,7 @@ router.route('/getSuggestions').get(authenticateToken, (req, res) => {
   User.findOne({id: req.query.id}, function(err, user) {
     if(user) {
       console.log('Test ' + suggestModules(user, user.id, function(result) {
-        console.log('res' + res)
+        console.log('res' + JSON.stringify(result))
         res.json({result: result, user: user})
       }))
     }
@@ -92,6 +92,7 @@ function suggestModules(user, id, cb) {
   console.log(user.currentModules)
 
   const suggestedModules = user.currentModules.map(m => m.id)//['123131', '123123', '1231', '13123', '2222', '1111'];
+  console.log(suggestedModules)
     Module.find({id: { $in: suggestedModules }}, function(err, res) {
       if(res) {
         return cb(res)
@@ -366,11 +367,37 @@ function uuidv4() {
   );
 }
 
+router.route('/removeSubs').get(authenticateToken, (req, res) => {
+  console.log('user:  ' +  req.query.id)
+  User.findOne({id: req.query.id}, function(err, stud) {
+    if(stud) {
+      console.log('????')
+      let newModules = stud.currentModules
+      console.log('curr ' + newModules)
+      newModules.splice(newModules.findIndex(mod => mod.id === req.query.moduleId), 1)
+      console.log(newModules)
+      stud.currentModules = newModules
+      stud.save((err, succ) => {
+        if(succ) {
+
+          console.log(stud)
+
+
+          res.status(200)
+          res.json({user: stud})
+        } else {
+          res.status(500)
+          res.send("")
+        }
+      })
+    }
+  })
+})
 
 router.route('/getApplications').get(authenticateToken, (req, res) => {
   console.log('triggered')
   console.log(req.query.id)
-  User.find({id: req.query.id}, function(err, user) {
+  User.findOne({id: req.query.id}, function(err, user) {
     if(user) {
       Application.find({student: {$elemMatch: {id: req.query.id}}}, function (err, appl) {
         if (appl) {

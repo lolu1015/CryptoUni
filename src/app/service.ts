@@ -47,4 +47,8 @@ export class DatabaseService {
   getApplications(id) {
     return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {observe: 'response', responseType: "text"});
   }
+
+  unsub(id, moduleId) {
+    return this.httpClient.get(`${this.uri}/removeSubs?id=${id}&moduleId=${moduleId}`, {observe: 'response', responseType: "text"});
+  }
 }

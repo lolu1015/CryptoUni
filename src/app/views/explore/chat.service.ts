@@ -12,9 +12,9 @@ export class ChatService {
     const length = question.length;
     let answer = ""
     switch (question) {
-      case "Empfehlen":
-        answer = "Ich habe dir deine Modulempfehlunge in der Liste ausgewählt"
-        this.searchString = "SW"
+      case "Empfehlen!":
+        answer = "Ich habe dir deine Modulempfehlungen in der Liste ausgewählt"
+        this.searchString = "BWL"
         break;
       case "Modulsuche!":
         answer = "Für was interessierst du dich?"
@@ -24,7 +24,7 @@ export class ChatService {
         break;
       default:
         answer = "Meine Empfehlungen für dich kannst du dir in der Liste anschauen"
-        this.searchString = "Data"
+        this.searchString = "Software"
     }
     setTimeout(
       () => this.responses.next(answer),

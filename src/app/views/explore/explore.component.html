@@ -8,9 +8,27 @@
     <input name="usernameInp" class="form-control" [(ngModel)]="searchString" placeholder="{{searchString}}" type="text">
   </div>
 </div>
-  <li *ngFor="let module of filteredModules(); index as i; first as isFirst" (click)="replace(module)" data-toggle="modal" data-target="#newEventModal">
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Module</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let module of filteredModules(); index as i; first as isFirst" (click)="replace(module)" data-toggle="modal" data-target="#newEventModal">
+      <th scope="row">{{module.id}}</th>
+      <td>{{module.name}}</td>
+      <td>{{module.module}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!--<li *ngFor="let module of filteredModules(); index as i; first as isFirst" (click)="replace(module)" data-toggle="modal" data-target="#newEventModal">
     {{module.name}}
-  </li>
+  </li>-->
 
 
   <div class="modal fade bd-example-modal-lg" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" size="xl">
@@ -48,13 +66,14 @@
               zoom="0.000001"
   ></pdf-viewer>
 
-
-<div class="container text-right">
-<img *ngIf="!chatShowing" src="../../assets/chat-symbol.png" id="logo" (click)="showChat()" class="d-inline-block align-top" alt="" width="100" height="100">
+<ng-container>
+<div *ngIf="!chatShowing || chatShowing === undefined" class="container text-right">
+<img  src="../../assets/chat-symbol.png" id="logo" (click)="showChat()" class="d-inline-block align-top" alt="" width="100" height="100">
 <kendo-chat *ngIf="chatShowing" style="float: right"
   [messages]="feed | async"
   [user]="user"
   (sendMessage)="sendMessage($event)">
 </kendo-chat>
 </div>
+</ng-container>
 </ng-container>

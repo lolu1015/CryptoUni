@@ -12,9 +12,29 @@
 
   <div class="card-body">
     <a>Modulwahl</a>
-    <li *ngFor="let module of modules; index as i; first as isFirst" (click)="show(module)" data-toggle="modal" data-target="#newEventModal">
+    <!--<li *ngFor="let module of modules; index as i; first as isFirst" (click)="show(module)" data-toggle="modal" data-target="#newEventModal">
       {{module.name}}
-    </li>
+    </li>-->
+
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Module</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let module of modules; index as i; first as isFirst" (click)="show(module)" data-toggle="modal" data-target="#newEventModal">
+        <th scope="row">{{module.id}}</th>
+        <td>{{module.name}}</td>
+        <td>{{module.module}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+
   </div>
 
   <div class="modal fade bd-example-modal-lg" id="newEventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" size="xl">
@@ -34,7 +54,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" >Schließen</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" >Belegen</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="unsubModule()">Abwählen</button>
           <button type="button" routerLink="/explore" data-dismiss="modal" (click)="setModule()" class="btn btn-primary">Suchen</button>
         </div>
       </div>

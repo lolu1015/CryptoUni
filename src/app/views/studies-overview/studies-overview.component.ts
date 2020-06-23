@@ -22,10 +22,16 @@ export class StudiesOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(JSON.parse(localStorage.getItem('user'))['id'])
-    this.service.getSuggestions(JSON.parse(localStorage.getItem('user'))['id']).subscribe(res => {
-      console.log(JSON.stringify(res))
-      let json = JSON.parse(res.body)
+    this.service.getSuggestions(JSON.parse(localStorage.getItem('user'))['id']).subscribe(result => {
+      let json = JSON.parse(result.body)
       localStorage.setItem('user', JSON.stringify(json.user))
+
+      console.log(result)
+      console.log(json)
+      console.log(json.result)
+      console.log(result.body)
+      console.log(JSON.parse(result.body))
+
       json.result.forEach((m: any) => {
         console.log(m.name)
         this.modules.push(m)
@@ -48,5 +54,12 @@ export class StudiesOverviewComponent implements OnInit {
 
   setModule() {
     localStorage.setItem('searchString', this.newModuleModule)
+  }
+
+  unsubModule() {
+    this.service.unsub(JSON.parse(localStorage.getItem('user')).id, this.newModule).subscribe(res => {
+      let json = JSON.parse(res.body)
+      localStorage.setItem('user', JSON.stringify(json.user))
+    })
   }
 }
