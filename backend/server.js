@@ -299,7 +299,7 @@ router.route('/apply').post(authenticateToken, (req, res) => {
   let newUser = new User;
 
   Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
-    User.findOne({id: req.query.id}, function(err, student) {if(student) {newUser = student
+    User.findOne({id: req.body['id']}, function(err, student) {if(student) {newUser = student
       newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
       newApplication.save((err, result) => {
         if (err) {
