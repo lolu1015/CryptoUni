@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 })
 export class DatabaseService {
 
-  uri = "https://ssd-backend.azurewebsites.net"
+  uri = "http://localhost:4000"
   task;
 
   constructor(private httpClient: HttpClient) {
@@ -17,7 +17,7 @@ export class DatabaseService {
   }
 
   getSuggestions(id) {
-    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`, {observe: 'response', responseType: 'text'});
+    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`);
   }
 
   getICALModule(id) {
@@ -45,10 +45,6 @@ export class DatabaseService {
   }
 
   getApplications(id) {
-    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {observe: 'response', responseType: "text"});
-  }
-
-  unsub(id, moduleId) {
-    return this.httpClient.get(`${this.uri}/removeSubs?id=${id}&moduleId=${moduleId}`, {observe: 'response', responseType: "text"});
+    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {responseType: "json"});
   }
 }
