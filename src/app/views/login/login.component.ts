@@ -2,11 +2,7 @@ import {Component, Injectable, OnInit} from '@angular/core';
 import {Router} from "@angular/router"
 import { SHA256, enc } from "crypto-js";
 import {DatabaseService} from "../../service";
-
-const user = 'test';
-const password = 'test';
-let signedIn = false
-let currentName = '';
+import {tokenNotExpired} from "angular2-jwt";
 
 
 @Injectable({
@@ -22,25 +18,24 @@ export class LoginComponent implements OnInit {
 
   password = ''
   username = ''
-  routeTo = '/login'
   displayWrongPassword = false
 
   constructor(private service: DatabaseService, private router: Router) { }
 
   ngOnInit(): void {
-    this.test()
   }
 
   login() {
-
     this.service.login(this.username, SHA256(this.password).toString(enc.Hex)).subscribe(data => {
       if(data.status === 200) {
-        signedIn = true;
-        currentName = this.username;
+        let json = JSON.parse(data.body)
+        localStorage.setItem('username', this.username)
+        document.cookie = `token=${json.token}`
+        localStorage.setItem('token', json.token);
+        localStorage.setItem('user', JSON.stringify(json.user))
         this.displayWrongPassword = false
         this.router.navigate(['/home'])
       } else {
-        signedIn = false
         this.displayWrongPassword = true
         this.router.navigate(['/login'])
       }
@@ -51,32 +46,21 @@ export class LoginComponent implements OnInit {
     })
   }
 
-
-  test() {
-    console.log("HASH")
-    console.log(SHA256("Test").toString(enc.Hex));
-    console.log("HASH")
-  }
-
-
-
-
-
-
-
-
-
-
-  isLoggedIn() {
-    return signedIn;
-  }
-
   logout() {
-    signedIn = false;
+    document.cookie = undefined
+    localStorage.setItem('token', "");
   }
 
   getId() {
-    console.log("currentNamE??? " + currentName)
-    return currentName;
+    return localStorage.getItem('username');
+  }
+
+  tokenExpired() {
+    if(localStorage.getItem('token') && !tokenNotExpired()) {
+      return true
+    } else if(!localStorage.getItem('token')) {
+      return false
+    }
+    return false
   }
 }

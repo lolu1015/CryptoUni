@@ -3,7 +3,7 @@ let bodyParser = require('body-parser')
 let path = require('path')
 let mongoose = require('mongoose')
 //import Student Model from ./models
-let Student = require('./app/models/student.ts')
+let Student = require('./app/models/user.ts')
 //initialize express app
 let app = express()
 //configure express app to parse json content and form data

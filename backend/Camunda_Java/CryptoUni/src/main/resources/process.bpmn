@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0pq18p9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:process id="Process_1vi2ppo" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_19qrbbp</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0fr8mbg" messageRef="Message_0xkxfko" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1e2vpjl" name="Engine entscheidet" camunda:class="de.camunda.cryptouni.CryptoUni.SynchronousServiceTask">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="status">"zugelassen"</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0yqye7m</bpmn:incoming>
+      <bpmn:outgoing>Flow_06ekui2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_1mci3qi" name="Professor entscheidet selbst" camunda:assignee="professor">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="statusNew">${FormField_18hdtak}</camunda:outputParameter>
+        </camunda:inputOutput>
+        <camunda:formData>
+          <camunda:formField id="FormField_18hdtak" label="Status" type="enum">
+            <camunda:validation>
+              <camunda:constraint name="required" />
+            </camunda:validation>
+            <camunda:value id="zulassen" name="zulassen" />
+            <camunda:value id="ablehnen" name="ablehnen" />
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61a" label="ApplicationId" type="string" defaultValue="${application_id}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61b" label="Name des angefragten Moduls" type="string" defaultValue="${moduleNew_name}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61c" label="Id des angefragten Moduls" type="string" defaultValue="${moduleNewId}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61d" label="Name Student" type="string" defaultValue="${student_name}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61e" label="Id Student" type="string" defaultValue="${studentId}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61f" label="Abzulösendes Modul" type="string" defaultValue="${moduleStandard_name}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="FormField_2u9j61g" label="Professor abzulösendes Modul" type="string" defaultValue="${moduleStandard_professor}">
+            <camunda:validation>
+              <camunda:constraint name="readonly" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1tqny19</bpmn:incoming>
+      <bpmn:outgoing>Flow_1q2sd7p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0v7dnxl">
+      <bpmn:incoming>Flow_19lvr4p</bpmn:incoming>
+      <bpmn:outgoing>Flow_0yqye7m</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1tqny19</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0yqye7m" name="normativ" sourceRef="Gateway_0v7dnxl" targetRef="Activity_1e2vpjl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not adaptive}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tqny19" name="adaptiv" sourceRef="Gateway_0v7dnxl" targetRef="Activity_1mci3qi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{adaptive}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_19qrbbp" sourceRef="StartEvent_1" targetRef="Activity_1cpt46i" />
+    <bpmn:sequenceFlow id="Flow_19lvr4p" sourceRef="Activity_1cpt46i" targetRef="Gateway_0v7dnxl" />
+    <bpmn:serviceTask id="Activity_1cpt46i" name="Check Case" camunda:class="de.camunda.cryptouni.CryptoUni.CheckCase">
+      <bpmn:incoming>Flow_19qrbbp</bpmn:incoming>
+      <bpmn:outgoing>Flow_19lvr4p</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1q2sd7p" sourceRef="Activity_1mci3qi" targetRef="http-connector" />
+    <bpmn:sequenceFlow id="Flow_06ekui2" sourceRef="Activity_1e2vpjl" targetRef="http-connector" />
+    <bpmn:sendTask id="http-connector" name="MessageEndTask" camunda:class="de.camunda.cryptouni.CryptoUni.MessageEndTask">
+      <bpmn:incoming>Flow_1q2sd7p</bpmn:incoming>
+      <bpmn:incoming>Flow_06ekui2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bczlmb</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="Event_1wvgioq">
+      <bpmn:incoming>Flow_1bczlmb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1bczlmb" sourceRef="http-connector" targetRef="Event_1wvgioq" />
+  </bpmn:process>
+  <bpmn:message id="Message_0xkxfko" name="camundaEndMessageEvent" />
+  <bpmn:message id="Message_1wjtdd6" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1vi2ppo">
+      <bpmndi:BPMNEdge id="Flow_1bczlmb_di" bpmnElement="Flow_1bczlmb">
+        <di:waypoint x="770" y="197" />
+        <di:waypoint x="852" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06ekui2_di" bpmnElement="Flow_06ekui2">
+        <di:waypoint x="590" y="290" />
+        <di:waypoint x="630" y="290" />
+        <di:waypoint x="630" y="197" />
+        <di:waypoint x="670" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1q2sd7p_di" bpmnElement="Flow_1q2sd7p">
+        <di:waypoint x="590" y="120" />
+        <di:waypoint x="630" y="120" />
+        <di:waypoint x="630" y="197" />
+        <di:waypoint x="670" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19lvr4p_di" bpmnElement="Flow_19lvr4p">
+        <di:waypoint x="320" y="197" />
+        <di:waypoint x="345" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19qrbbp_di" bpmnElement="Flow_19qrbbp">
+        <di:waypoint x="188" y="197" />
+        <di:waypoint x="220" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tqny19_di" bpmnElement="Flow_1tqny19">
+        <di:waypoint x="370" y="172" />
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="490" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="402" y="103" width="36" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yqye7m_di" bpmnElement="Flow_0yqye7m">
+        <di:waypoint x="370" y="222" />
+        <di:waypoint x="370" y="290" />
+        <di:waypoint x="490" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="398" y="273" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_16ejtco_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02709of_di" bpmnElement="Activity_1e2vpjl">
+        <dc:Bounds x="490" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vj6zx8_di" bpmnElement="Activity_1mci3qi">
+        <dc:Bounds x="490" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v7dnxl_di" bpmnElement="Gateway_0v7dnxl" isMarkerVisible="true">
+        <dc:Bounds x="345" y="172" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xe01dq_di" bpmnElement="Activity_1cpt46i">
+        <dc:Bounds x="220" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nxbpxc_di" bpmnElement="http-connector">
+        <dc:Bounds x="670" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wvgioq_di" bpmnElement="Event_1wvgioq">
+        <dc:Bounds x="852" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
