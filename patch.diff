@@ -1,0 +1,24 @@
+diff --git a/src/app/service.ts b/src/app/service.ts
+index a955d03..2b839e5 100644
+--- a/src/app/service.ts
++++ b/src/app/service.ts
+@@ -17,7 +17,6 @@ export class DatabaseService {
+   }
+ 
+   getSuggestions(id) {
+-    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`);
+   }
+ 
+   getICALModule(id) {
+@@ -45,6 +44,10 @@ export class DatabaseService {
+   }
+ 
+   getApplications(id) {
+-    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {responseType: "json"});
++    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {observe: 'response', responseType: "text"});
++  }
++
++  unsub(id, moduleId) {
++    return this.httpClient.get(`${this.uri}/removeSubs?id=${id}&moduleId=${moduleId}`, {observe: 'response', responseType: "text"});
+   }
+ }
