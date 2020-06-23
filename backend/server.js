@@ -371,6 +371,16 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
   })
 })
 
+router.route('/sendStatus').post((req, res) => {
+  
+  res.set('Content-Type', 'text/html');
+  res.send("IrgendeinString");
+
+  app.use(bodyParser.json());
+
+  console.log('sendStatus!' + JSON.stringify(req.body));  
+})
+
 /*
 //dummy ical strings for previewing it in a current timetable
 function getAdditionalICALString(name) {
