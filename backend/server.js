@@ -73,11 +73,12 @@ router.route('/getUserData').get(authenticateToken, (req, res) => {
   })
 })
 
+
 router.route('/getSuggestions').get(authenticateToken, (req, res) => {
   console.log(req.query.id)
   User.findOne({id: req.query.id}, function(err, user) {
     if(user) {
-      console.log('Test ' + suggestModules(user.id, function(result) {
+      console.log('Test ' + suggestModules(user, user.id, function(result) {
         console.log('res' + res)
         res.json(result)
       }))
@@ -86,8 +87,11 @@ router.route('/getSuggestions').get(authenticateToken, (req, res) => {
 })
 
 // dummy function which returns dummy suggestions for a user
-function suggestModules(id, cb) {
-  const suggestedModules = ['123131', '123123', '1231', '13123', '2222', '1111'];
+function suggestModules(user, id, cb) {
+
+  console.log(user.currentModules)
+
+  const suggestedModules = user.currentModules.map(m => m.id)//['123131', '123123', '1231', '13123', '2222', '1111'];
     Module.find({id: { $in: suggestedModules }}, function(err, res) {
       if(res) {
         return cb(res)
@@ -295,7 +299,7 @@ router.route('/apply').post(authenticateToken, (req, res) => {
   let newUser = new User;
 
   Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
-    User.findOne({id: 'test'}, function(err, student) {if(student) {newUser = student
+    User.findOne({id: req.query.id}, function(err, student) {if(student) {newUser = student
       newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
       newApplication.save((err, result) => {
         if (err) {
@@ -357,6 +361,7 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
   console.log(req.query.id)
   Application.find({student: {$elemMatch: {id: req.query.id}}}, function (err, appl) {
     if (appl) {
+      console.log(JSON.stringify(appl))
       res.status(200)
       res.json(appl)
     } else {
@@ -594,13 +599,7 @@ let newUser = new User({
       id: '2222',
       module: 'BWL',
       description: "Unternehmenssteuerung Description"
-    }),
-    new Module({
-      name: "SWArch.",
-      id: '6666',
-      module: 'Software Design',
-      description: "SWA Description"
-    }),
+    })
   ],
   role: "student"
 })
