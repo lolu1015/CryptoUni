@@ -93,12 +93,12 @@ function suggestModules(user, id, cb) {
 
   const suggestedModules = user.currentModules.map(m => m.id)//['123131', '123123', '1231', '13123', '2222', '1111'];
   console.log(suggestedModules)
-    Module.find({id: { $in: suggestedModules }}, function(err, res) {
-      if(res) {
-        return cb(res)
-      } else {
-      }
-    })
+  Module.find({id: { $in: suggestedModules }}, function(err, res) {
+    if(res) {
+      return cb(res)
+    } else {
+    }
+  })
 }
 
 // returns descriptions of modules as pdf by the id of module
@@ -207,30 +207,30 @@ router.route('/icalAPI').get((req, res) => {
 
 //gets called by frontend - no authorization implemented (would authorizize with jwt given by login)
 router.route('/ical').get(authenticateToken, (req, res) => {
-        let data = "";
-        let request = https.request({'host': 'www.iwi.hs-karlsruhe.de',
-            'path': '/intranet/userfiles/File/ical/reju1027.ics',
-            'auth': 'reju1027:cryptocopy'
-          },
-          function (response) {
-            response.setEncoding('utf8');
-            response.on('data', function (chunk) {
-              //console.log('BODY: ' + chunk);
-              data += chunk
-            });
+  let data = "";
+  let request = https.request({'host': 'www.iwi.hs-karlsruhe.de',
+      'path': '/intranet/userfiles/File/ical/reju1027.ics',
+      'auth': 'reju1027:cryptocopy'
+    },
+    function (response) {
+      response.setEncoding('utf8');
+      response.on('data', function (chunk) {
+        //console.log('BODY: ' + chunk);
+        data += chunk
+      });
 
-            response.on('end', function(){
+      response.on('end', function(){
 
-                  console.log(data)
+        console.log(data)
 
-                  res.set('Content-Type', 'text/calendar;charset=utf-8');
-                  res.set('Content-Disposition', 'attachment; filename="cryptoCalendar.ics"');
-                  res.send(data);
+        res.set('Content-Type', 'text/calendar;charset=utf-8');
+        res.set('Content-Disposition', 'attachment; filename="cryptoCalendar.ics"');
+        res.send(data);
 
 
-            })
-          });
-        request.end();
+      })
+    });
+  request.end();
 });
 
 
@@ -275,6 +275,10 @@ router.route('/getModules').get(authenticateToken, (req, res) => {
 router.route('/login').post((req, res) => {
   console.log(req.body['hash'])
   console.log(req.body['id'])
+  res.header('Access-Control-Allow-Origin' , '*' );
+  res.header("Access-Control-Allow-Credentials", "true")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
   User.findOne({id: req.body['id']}, function(err, user) {
     if(err) {
       res.status('500').send("Internal Error");
@@ -613,7 +617,7 @@ function getAdditionalICALString(name) {
 
 // MOCK DATA
 
-User.deleteMany({}).exec()
+
 
 let newUser = new User({
   name: "Bobby Lee",
@@ -675,160 +679,177 @@ let newUser = new User({
   role: "student"
 })
 
-newUser.save((err, succ) => {
-  if (err) {
-    console.log(err)
-  } else {
-    console.log('succ')
-  }
+
+
+
+/*let newModule = new Module({
+  name: "SWE",
+  id: "SWE",
+  professor: "Test",
+  description: "test",
+  module: "Software Engineering",
+  grade: 3.7
 })
 
-  /*let newModule = new Module({
-    name: "SWE",
-    id: "SWE",
-    professor: "Test",
-    description: "test",
-    module: "Software Engineering",
-    grade: 3.7
-  })
+newModule.save((err, succ) => {
+  }
+)*/
 
-  newModule.save((err, succ) => {
-    }
-  )*/
+let newAdmin = new User({
+  name: "admin",
+  id: "admin",
+  password: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+  modules: [],
+  role: "admin"
+})
 
-  let newAdmin = new User({
-    name: "admin",
-    id: "admin",
-    password: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-    modules: [],
-    role: "admin"
-  })
-
-  newAdmin.save((err, succ) => {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log('succ')
-    }
-  })
-
-
-  Module.deleteMany({}).exec()
-
-  let allModules = [
-    new Module({
-      name: "Service & Solution Design",
-      id: '123131',
-      module: 'Software Design',
-      description: "Beispielbeschreibung SSD"
-    }),
-    new Module({
-      name: "Proces.Design & Impl.",
-      id: '123123',
-      module: 'Software Design',
-      description: "Beispielbeschreibung PDI"
-    }),
-    new Module({
-      name: "Data Science",
-      id: '1231',
-      module: 'Data Science',
-      description: "Data Mining Description"
-    }),
-    new Module({
-      name: "Marketing",
-      id: '1111',
-      module: 'BWL',
-      description: "Marketing Description"
-    }),
-    new Module({
-      name: "Unternehmenssteuerung",
-      id: '2222',
-      module: 'BWL',
-      description: "Unternehmenssteuerung Description"
-    }),
-    new Module({
-      name: "Finanzmanagement",
-      id: '3333',
-      module: 'BWL',
-      description: "Finanzmanagement Description"
-    }),
-    new Module({
-      name: "Allg.BWL",
-      id: '4444',
-      module: 'BWL',
-      description: "Allg. BWL Description"
-    }),
-    new Module({
-      name: "SWE",
-      id: '5555',
-      module: 'Software Design',
-      description: "SWE Description"
-    }),
-    new Module({
-      name: "SWArch.",
-      id: '6666',
-      module: 'Software Design',
-      description: "SWA Description"
-    }),
-  ]
-
-  allModules.forEach(module => {
-    module.save((err, succ) => {
+User.deleteMany({}, function(err, succ) {
+  if (succ) {
+    newUser.save((err, succ) => {
       if (err) {
         console.log(err)
       } else {
         console.log('succ')
       }
     })
-  })
+    newAdmin.save((err, succ) => {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log('succ')
+      }
+    })
+  }
+})
 
 
-  Application.deleteMany({}).exec()
-
-  let testApplication1 = new Application({
-    id: 123,
-    status: "pending",
-    module: [new Module({
-      name: "Big Data",
-      id: '13123',
-      module: 'Data Science',
-      description: "Big Data Description"
-    })],
-    student: [new User({
-      name: "Bobby Lee",
-      id: "bo1021"
-    })],
-    responsible: "some prof",
-  })
-
-  let testApplication2 = new Application({
-    id: 123,
-    status: "pending",
-    module: [new Module({
-      name: "Data Analytics",
-      id: '123323',
-      module: 'Data Science',
-      description: "Data Analytics Description"
-    })],
-    student: [new User({
-      name: "Bobby Lee",
-      id: "bo1021"
-    })],
-    responsible: "some prof",
-  })
 
 
-  testApplication1.save((err, succ) => {
-    if (succ)
-      console.log('appl succ')
-  })
 
-  testApplication2.save((err, succ) => {
-    if (succ)
-      console.log('appl succ')
-  })
+let allModules = [
+  new Module({
+    name: "Service & Solution Design",
+    id: '123131',
+    module: 'Software Design',
+    description: "Beispielbeschreibung SSD"
+  }),
+  new Module({
+    name: "Proces.Design & Impl.",
+    id: '123123',
+    module: 'Software Design',
+    description: "Beispielbeschreibung PDI"
+  }),
+  new Module({
+    name: "Data Science",
+    id: '1231',
+    module: 'Data Science',
+    description: "Data Mining Description"
+  }),
+  new Module({
+    name: "Marketing",
+    id: '1111',
+    module: 'BWL',
+    description: "Marketing Description"
+  }),
+  new Module({
+    name: "Unternehmenssteuerung",
+    id: '2222',
+    module: 'BWL',
+    description: "Unternehmenssteuerung Description"
+  }),
+  new Module({
+    name: "Finanzmanagement",
+    id: '3333',
+    module: 'BWL',
+    description: "Finanzmanagement Description"
+  }),
+  new Module({
+    name: "Allg.BWL",
+    id: '4444',
+    module: 'BWL',
+    description: "Allg. BWL Description"
+  }),
+  new Module({
+    name: "SWE",
+    id: '5555',
+    module: 'Software Design',
+    description: "SWE Description"
+  }),
+  new Module({
+    name: "SWArch.",
+    id: '6666',
+    module: 'Software Design',
+    description: "SWA Description"
+  }),
+]
+
+Module.deleteMany({}, function(err, succ) {
+  if(succ) {
+    allModules.forEach(module => {
+      module.save((err, succ) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log('succ')
+        }
+      })
+    })
+  }
+}).exec()
 
 
-  app.use('/', router);
-  app.listen(4000, () => console.log(`Express server running on port 4000`));
+
+
+
+let testApplication1 = new Application({
+  id: 123,
+  status: "pending",
+  module: [new Module({
+    name: "Big Data",
+    id: '13123',
+    module: 'Data Science',
+    description: "Big Data Description"
+  })],
+  student: [new User({
+    name: "Bobby Lee",
+    id: "bo1021"
+  })],
+  responsible: "some prof",
+})
+
+let testApplication2 = new Application({
+  id: 123,
+  status: "pending",
+  module: [new Module({
+    name: "Data Analytics",
+    id: '123323',
+    module: 'Data Science',
+    description: "Data Analytics Description"
+  })],
+  student: [new User({
+    name: "Bobby Lee",
+    id: "bo1021"
+  })],
+  responsible: "some prof",
+})
+
+
+Application.deleteMany({}, function(err, succ) {
+  if (succ) {
+    testApplication1.save((err, succ) => {
+      if (succ)
+        console.log('appl succ')
+    })
+
+    testApplication2.save((err, succ) => {
+      if (succ)
+        console.log('appl succ')
+    })
+  }
+}).exec()
+
+
+
+app.use('/', router);
+app.listen(4000, () => console.log(`Express server running on port 4000`));
 

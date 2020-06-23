@@ -1,0 +1,8 @@
+{
+  "*/*": {
+    "target": "https://ssd-backend.azurewebsites.net/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

@@ -1,2 +1,17 @@
-<p *ngFor="let item of data; index as i;">Name: {{item.module[0].name}} Status: {{item.status}}</p>
-
+<!--<p *ngFor="let item of data; index as i;">Name: {{item.module[0].name}} Status: {{item.status}}</p>-->
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Modul-ID</th>
+    <th scope="col">Modul</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of data; index as i;">
+    <th scope="row">{{item.id}}</th>
+    <td>{{item.module[0].name}}</td>
+    <td>{{item.status}}</td>
+  </tr>
+  </tbody>
+</table>

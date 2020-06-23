@@ -33,7 +33,7 @@ export class DatabaseService {
   }
 
   login(id, hash) {
-    return this.httpClient.post(`${this.uri}/login`, {id: id, hash: hash}, {observe: 'response', responseType: 'text'});
+    return this.httpClient.post(`http://localhost:4000/login`, {id: id, hash: hash}, {observe: 'response', responseType: 'text'});
   }
 
   pushApplication(id, moduleId) {
