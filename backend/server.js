@@ -328,6 +328,7 @@ router.route('/apply').post(authenticateToken, (req, res) => {
           var data = JSON.stringify({
             "messageName" : "camundaEndMessageEvent",
             "processVariables" : {
+              "application_id" : {"value" : newApplication.id, "type": "String"},
               "moduleNew__id" : {"value" : newApplication.module[0]._id, "type": "String"},
               "moduleNew_name" : {"value" : newApplication.module[0].name, "type": "String"},
               "moduleNewId" : {"value" : newApplication.module[0].id, "type": "String"},
