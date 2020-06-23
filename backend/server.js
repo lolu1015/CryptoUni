@@ -80,7 +80,7 @@ router.route('/getSuggestions').get(authenticateToken, (req, res) => {
     if(user) {
       console.log('Test ' + suggestModules(user, user.id, function(result) {
         console.log('res' + res)
-        res.json(result)
+        res.json({result: result, user: user})
       }))
     }
   })
@@ -303,7 +303,7 @@ router.route('/apply').post(authenticateToken, (req, res) => {
 
   Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
     User.findOne({id: req.body['id']}, function(err, student) {if(student) {newUser = student
-      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newUser], responsible: newModule.professor});
+      newApplication = new Application({id: uuidv4(), status:"warten", module: [newModule], student: [newUser], responsible: newModule.professor});
       newApplication.save((err, result) => {
         if (err) {
           console.log(err)
@@ -359,22 +359,36 @@ router.route('/apply').post(authenticateToken, (req, res) => {
   }});
 });
 
+//create simple uuid for application id
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
 
 router.route('/getApplications').get(authenticateToken, (req, res) => {
   console.log('triggered')
   console.log(req.query.id)
-  Application.find({student: {$elemMatch: {id: req.query.id}}}, function (err, appl) {
-    if (appl) {
-      console.log(JSON.stringify(appl))
-      res.status(200)
-      res.json(appl)
-    } else {
-      res.status(200)
+  User.find({id: req.query.id}, function(err, user) {
+    if(user) {
+      Application.find({student: {$elemMatch: {id: req.query.id}}}, function (err, appl) {
+        if (appl) {
+          console.log(JSON.stringify(appl))
+          res.status(200)
+          res.json({appl: appl, user: user})
+        } else {
+          res.status(200)
+        }
+        ;
+      })
     }
-    ;
   })
 })
 
+// receives answer from camunda
+// updates application in db accordingly
+// updates current modules of student
 router.route('/sendStatus').post((req, res) => {
 
   res.set('Content-Type', 'text/html');
@@ -382,6 +396,22 @@ router.route('/sendStatus').post((req, res) => {
 
   app.use(bodyParser.json());
 
+  Application.find({id: req.body.application_id}, function(err, appl) {
+    if (appl) {
+      appl.status = req.body.status
+      appl.save()
+      if(req.body.status === 'zulassen') {
+        User.find({id: appl.user[0].id}, function (err, stud) {
+          if (stud) {
+            let modules = stud.currentModules
+            modules.push(appl.module[0])
+            stud.currentModules = modules
+            stud.save()
+          }
+        })
+      }
+    }
+  })
   console.log('sendStatus!' + JSON.stringify(req.body));
 })
 

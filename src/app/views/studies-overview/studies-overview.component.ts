@@ -22,9 +22,11 @@ export class StudiesOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(JSON.parse(localStorage.getItem('user'))['id'])
-    this.service.getSuggestions(JSON.parse(localStorage.getItem('user'))['id']).subscribe((res: []) => {
+    this.service.getSuggestions(JSON.parse(localStorage.getItem('user'))['id']).subscribe(res => {
       console.log(JSON.stringify(res))
-      res.forEach((m: any) => {
+      let json = JSON.parse(res.body)
+      localStorage.setItem('user', JSON.stringify(json.user))
+      json.result.forEach((m: any) => {
         console.log(m.name)
         this.modules.push(m)
       })

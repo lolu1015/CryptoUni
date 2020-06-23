@@ -14,11 +14,9 @@ export class ApplicationsComponent implements OnInit {
   ngOnInit(): void {
     console.log(JSON.parse(localStorage.getItem('user')).id)
     this.service.getApplications(JSON.parse(localStorage.getItem('user'))['id']).subscribe(items => {
-      console.log('ITEMS!  ' + items)
-      console.log(JSON.stringify(items[0]))
-      console.log('scc')
-      console.log(JSON.stringify(items[1]))
-      this.data = items
+      let json = JSON.parse(items.body)
+      localStorage.setItem('user', JSON.stringify(json.user))
+      this.data = json.appl
     })
   }
 

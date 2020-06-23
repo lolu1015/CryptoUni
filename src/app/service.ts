@@ -17,7 +17,7 @@ export class DatabaseService {
   }
 
   getSuggestions(id) {
-    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`);
+    return this.httpClient.get(`${this.uri}/getSuggestions?id=${id}`, {observe: 'response', responseType: 'text'});
   }
 
   getICALModule(id) {
@@ -45,6 +45,6 @@ export class DatabaseService {
   }
 
   getApplications(id) {
-    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {responseType: "json"});
+    return this.httpClient.get(`${this.uri}/getApplications?id=${id}`, {observe: 'response', responseType: "text"});
   }
 }
