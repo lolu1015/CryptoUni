@@ -293,6 +293,9 @@ router.route('/login').post((req, res) => {
 // calls camunda service (new application which has to be accepted/declined by professor)
 router.route('/apply').post(authenticateToken, (req, res) => {
 
+  console.log(req.body['id'])
+  console.log(req.body['moduleId'])
+
   res.set('Content-Type', 'text/html');
   let newApplication = new Application;
   let newModule = new Module;
@@ -300,7 +303,7 @@ router.route('/apply').post(authenticateToken, (req, res) => {
 
   Module.findOne({id: req.body['moduleId']}, function(err, module) {if(module) {newModule = module
     User.findOne({id: req.body['id']}, function(err, student) {if(student) {newUser = student
-      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newStudent], responsible: newModule.professor});
+      newApplication = new Application({id: "fdsgst54sdf4w5df45ds", status:"warten", module: [newModule], student: [newUser], responsible: newModule.professor});
       newApplication.save((err, result) => {
         if (err) {
           console.log(err)
@@ -372,13 +375,13 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
 })
 
 router.route('/sendStatus').post((req, res) => {
-  
+
   res.set('Content-Type', 'text/html');
   res.send("IrgendeinString");
 
   app.use(bodyParser.json());
 
-  console.log('sendStatus!' + JSON.stringify(req.body));  
+  console.log('sendStatus!' + JSON.stringify(req.body));
 })
 
 /*

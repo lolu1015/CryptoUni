@@ -121,7 +121,7 @@ export class ExploreComponent implements OnInit {
 
   //triggers preview of new module in current timetable (displayed in red)
   showInCalendar() {
-    this.timeTable.setAdditionalModule(this.newModuleName)
+    this.timeTable.setAdditionalModule(this.newModuleName, this.newModule)
   }
 
 }

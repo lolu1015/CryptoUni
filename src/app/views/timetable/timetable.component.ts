@@ -12,6 +12,7 @@ import {load} from "@progress/kendo-angular-intl";
 
 let savedTitle = ""
 let loadAddtionalModule = ""
+let addtionalId = ""
 
 declare var ICAL: any;
 
@@ -155,12 +156,13 @@ export class TimetableComponent implements OnInit {
     this.init()
   }
 
-  setAdditionalModule(module) {
+  setAdditionalModule(module, id) {
     loadAddtionalModule = module
+    addtionalId = id
   }
 
   apply() {
-    this.service.pushApplication(this.userService.getId(), loadAddtionalModule).subscribe();
+    this.service.pushApplication(this.userService.getId(), addtionalId).subscribe();
   }
 }
 
