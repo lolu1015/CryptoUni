@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 })
 export class DatabaseService {
 
-  uri = "https://ssd-backend.azurewebsites.net/"
+  uri = "https://ssd-backend.azurewebsites.net"
   task;
 
   constructor(private httpClient: HttpClient) {
