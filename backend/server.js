@@ -271,13 +271,22 @@ router.route('/getModules').get(authenticateToken, (req, res) => {
   });
 })
 
+router.route('/test').get((req, res) => {
+  res.header('Access-Control-Allow-Origin' , '*' );
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Credentials", "true")
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+  res.status(200).send({test: "success"})
+})
+
 // returns 200 if login successfull otherwise 401
-router.route('/login').post((req, res) => {
+router.route('/login').post(cors(), (req, res) => {
   console.log(req.body['hash'])
   console.log(req.body['id'])
   res.header('Access-Control-Allow-Origin' , '*' );
-  res.header("Access-Control-Allow-Credentials", "true")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  //res.header("Access-Control-Allow-Credentials", "true")
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
   User.findOne({id: req.body['id']}, function(err, user) {
     if(err) {
@@ -422,27 +431,53 @@ router.route('/getApplications').get(authenticateToken, (req, res) => {
 // updates current modules of student
 router.route('/sendStatus').post((req, res) => {
 
-  res.set('Content-Type', 'text/html');
+  //res.set('Content-Type', 'text/html');
   res.send("IrgendeinString");
 
-  app.use(bodyParser.json());
+  //app.use(bodyParser.json());
 
-  Application.find({id: req.body.application_id}, function(err, appl) {
+  console.log(req.body['status'])
+  console.log(req.body.application_id)
+
+  Application.findOne({id: req.body.application_id} , function(err, appl) {
     if (appl) {
+      Application.findOne({id: req.body.application_id}).remove().exec();
+      console.log('appl ' + appl)
       appl.status = req.body.status
-      appl.save()
+
+      let changedAppl = new Application({
+        id: appl.id,
+        status: req.body.status,
+        module: appl.module,
+        student: appl.student,
+        responsible: appl.responsible,
+      })
+      changedAppl.save()
+
       if(req.body.status === 'zulassen') {
-        User.find({id: appl.user[0].id}, function (err, stud) {
+        User.findOne({id: appl.student[0].id}, function (err, stud) {
           if (stud) {
+            User.findOne({id: appl.student[0].id}).remove().exec();
+
             let modules = stud.currentModules
             modules.push(appl.module[0])
             stud.currentModules = modules
-            stud.save()
+            let newStud = new User({
+              name: stud.name,
+              id: stud.id,
+              password: stud.password,
+              modules: stud.modules,
+              currentModules: modules,
+              role: stud.role
+            })
+            newStud.save()
           }
         })
       }
     }
   })
+  console.log(req.body['status'])
+  console.log(req.body.application_id)
   console.log('sendStatus!' + JSON.stringify(req.body));
 })
 
@@ -801,7 +836,7 @@ Module.deleteMany({}, function(err, succ) {
 
 
 
-let testApplication1 = new Application({
+/*let testApplication1 = new Application({
   id: 123,
   status: "pending",
   module: [new Module({
@@ -815,16 +850,16 @@ let testApplication1 = new Application({
     id: "bo1021"
   })],
   responsible: "some prof",
-})
+})*/
 
 let testApplication2 = new Application({
   id: 123,
   status: "pending",
   module: [new Module({
-    name: "Data Analytics",
-    id: '123323',
-    module: 'Data Science',
-    description: "Data Analytics Description"
+    name: "Allg.BWL",
+    id: '4444',
+    module: 'BWL',
+    description: "Allg. BWL Description"
   })],
   student: [new User({
     name: "Bobby Lee",
@@ -836,10 +871,10 @@ let testApplication2 = new Application({
 
 Application.deleteMany({}, function(err, succ) {
   if (succ) {
-    testApplication1.save((err, succ) => {
+    /*testApplication1.save((err, succ) => {
       if (succ)
         console.log('appl succ')
-    })
+    })*/
 
     testApplication2.save((err, succ) => {
       if (succ)

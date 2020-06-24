@@ -1,6 +1,6 @@
 {
   "*/*": {
-    "target": "https://ssd-backend.azurewebsites.net/",
+    "target": "https://localhost:4200/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+
     this.service.login(this.username, SHA256(this.password).toString(enc.Hex)).subscribe(data => {
       if(data.status === 200) {
         let json = JSON.parse(data.body)

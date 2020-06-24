@@ -1,6 +1,7 @@
 /* tslint:disable */
 import { Component, OnInit } from '@angular/core';
 import {DatabaseService} from "../../service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-studies-overview',
@@ -18,7 +19,7 @@ export class StudiesOverviewComponent implements OnInit {
   showPDF = false
   modulHandbuch
 
-  constructor(private service: DatabaseService) { }
+  constructor(private service: DatabaseService, private router: Router) { }
 
   ngOnInit(): void {
     console.log(JSON.parse(localStorage.getItem('user'))['id'])
@@ -60,6 +61,7 @@ export class StudiesOverviewComponent implements OnInit {
     this.service.unsub(JSON.parse(localStorage.getItem('user')).id, this.newModule).subscribe(res => {
       let json = JSON.parse(res.body)
       localStorage.setItem('user', JSON.stringify(json.user))
+      window.location.reload()
     })
   }
 }
