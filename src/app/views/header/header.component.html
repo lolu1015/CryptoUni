@@ -4,19 +4,19 @@
   </a>
   <div class="navbar-nav ml-auto">
     <div *ngIf="isLoggedIn()">
-    <button *ngIf="!isAdmin()" type="button" class="btn btn-primary navbar-btn" routerLink="/studiesoverview" style="margin-right: 10px">Stundenplan</button>
-    <button type="button" class="btn btn-primary navbar-btn" routerLink="/explore" style="margin-right: 10px" >Entdecken</button>
-    <button type="button" class="btn btn-primary navbar-btn" routerLink="/" style="margin-right: 10px" >Speicher</button>
+    <button *ngIf="!isAdmin()" type="button" class="btn btn-outline-secondary navbar-btn" routerLink="/studiesoverview" style="margin-right: 10px">Stundenplan</button>
+    <button type="button" class="btn btn-outline-secondary navbar-btn" routerLink="/explore" style="margin-right: 10px" >Entdecken</button>
+    <button type="button" class="btn btn-outline-secondary navbar-btn" routerLink="/" style="margin-right: 10px" >Speicher</button>
       <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px">Konto</button>
+        <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px">Konto</button>
         <div class="dropdown-menu">
           <span class="dropdown-item" (click)="getUserData()" routerLink="/">Export</span>
         </div>
       </div>
-      <button *ngIf="isAdmin()" type="button" class="btn btn-primary navbar-btn" routerLink="/applications" style="margin-right: 10px">Bewerbungen</button>
-      <button *ngIf="!isAdmin()" type="button" class="btn btn-primary navbar-btn" routerLink="/applications" style="margin-right: 10px">Bewerbungen</button>
+      <button *ngIf="isAdmin()" type="button" class="btn btn-outline-secondary navbar-btn" routerLink="/applications" style="margin-right: 10px">Bewerbungen</button>
+      <button *ngIf="!isAdmin()" type="button" class="btn btn-outline-secondary navbar-btn" routerLink="/applications" style="margin-right: 10px">Bewerbungen</button>
     <div class="btn-group">
-      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px">Mehr</button>
+      <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" style="margin-right: 10px">Mehr</button>
       <div class="dropdown-menu">
         <span class="dropdown-item" routerLink="/">News</span>
         <span class="dropdown-item" routerLink="/">Mails</span>
@@ -25,10 +25,10 @@
     </div>
     <div *ngIf="isLoggedIn()">
       <a style="color:black;font-size: 24px; font-weight: bold; margin-right: 10px">{{getName()}}</a>
-    <button type="button" routerLink="/home" (click)="logout()" class="btn btn-warning navbar-btn">Abmelden</button>
+    <button type="button" routerLink="/home" (click)="logout()" class="btn btn-dark navbar-btn">Abmelden</button>
     </div>
     <div *ngIf="!isLoggedIn()">
-      <button type="button" routerLink="/login" class="btn btn-warning navbar-btn">Anmelden</button>
+      <button type="button" routerLink="/login" class="btn btn-dark navbar-btn">Anmelden</button>
     </div>
   </div>
 </nav>
