@@ -103,8 +103,12 @@ export class ExploreComponent implements OnInit {
 
     if (this.searchString.length === 0)
       return []
-    else
-      return this.modules.filter(mod => mod.module.toLowerCase().includes(this.searchString.toLowerCase()) || mod.name.toLowerCase().includes(this.searchString.toLowerCase()) || this.searchString.toLowerCase().includes(mod.name.toLowerCase()) || mod.module.includes(this.modules.filter(mod => this.searchString.toLowerCase().includes(mod.name.toLowerCase())).map(mod => mod.module)[0]));
+    else {
+      let prefilteredModules = this.modules.filter(mod => mod.module.toLowerCase().includes(this.searchString.toLowerCase()) || mod.name.toLowerCase().includes(this.searchString.toLowerCase()) || this.searchString.toLowerCase().includes(mod.name.toLowerCase()) || mod.module.includes(this.modules.filter(mod => this.searchString.toLowerCase().includes(mod.name.toLowerCase())).map(mod => mod.module)[0]));
+      prefilteredModules = prefilteredModules.filter(mod => !(JSON.parse(localStorage.getItem('user')).currentModules.map(mod => mod.name).includes(mod.name)))
+      return prefilteredModules
+    }
+
   }
 
   //previews modulhandbuch of selected module
