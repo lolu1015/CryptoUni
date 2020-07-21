@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" id="Definitions_1ic98y6" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <cmmn:case id="subject_application">
+    <cmmn:casePlanModel id="CasePlanModel_05j21t2" name="Fach Application" autoComplete="true">
+      <cmmn:extensionElements>
+        <camunda:variableListener event="update" class="de.camunda.cryptouni.CryptoUni.CamundaBpmProcessApplication" />
+      </cmmn:extensionElements>
+      <cmmn:planItem id="PlanItem_1" name="Abzulösendes Fach ist SSD" definitionRef="HumanTask_1lt07gy">
+        <cmmn:documentation id="Documentation_0sdaapl">statusNew has to be updated to the value zulassen or ablehnen! The rest values have to be proved and completed! Then you can complete the Task.</cmmn:documentation>
+        <cmmn:itemControl id="PlanItemControl_0avm26j" />
+        <cmmn:entryCriterion id="EntryCriterion_0amulpq" sentryRef="Sentry_1gxgbkj" />
+      </cmmn:planItem>
+      <cmmn:planItem id="PlanItem_1fn4i0n" name="Abzulösendes Fach ist nicht SSD" definitionRef="HumanTask_01j21k9">
+        <cmmn:itemControl id="PlanItemControl_03ahqx1" />
+        <cmmn:entryCriterion id="EntryCriterion_12c73ch" sentryRef="Sentry_04d5ap3" />
+      </cmmn:planItem>
+      <cmmn:planItem id="PlanItem_1cvhgbd" name="Status_New ausgewählt" definitionRef="Milestone_0v7vtg3">
+        <cmmn:entryCriterion id="EntryCriterion_0iv3xqh" sentryRef="Sentry_1imrxvc" />
+      </cmmn:planItem>
+      <cmmn:sentry id="Sentry_1gxgbkj">
+        <cmmn:ifPart id="IfPart_19qjy7f">
+          <cmmn:condition id="Expression_13762iv">${moduleStandard_name=='SSD'}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:sentry id="Sentry_04d5ap3">
+        <cmmn:ifPart id="IfPart_14ko5rd">
+          <cmmn:condition id="Expression_0dbrh53">${moduleStandard_name!='SSD'}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:sentry id="Sentry_1imrxvc">
+        <cmmn:planItemOnPart id="PlanItemOnPart_07jtfdu" sourceRef="PlanItem_1">
+          <cmmn:standardEvent>complete</cmmn:standardEvent>
+        </cmmn:planItemOnPart>
+        <cmmn:planItemOnPart id="PlanItemOnPart_0vvguam" sourceRef="PlanItem_1fn4i0n">
+          <cmmn:standardEvent>complete</cmmn:standardEvent>
+        </cmmn:planItemOnPart>
+        <cmmn:ifPart id="IfPart_0gt7s2i">
+          <cmmn:condition id="Expression_166wvhx">${statusNew=='zulassen' || statusNew=='ablehnen'}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:humanTask id="HumanTask_1lt07gy" name="Abzulösendes Fach ist SSD" camunda:assignee="professor">
+        <cmmn:extensionElements>
+          <camunda:variableListener event="update" />
+        </cmmn:extensionElements>
+      </cmmn:humanTask>
+      <cmmn:humanTask id="HumanTask_01j21k9" camunda:assignee="professor" />
+      <cmmn:milestone id="Milestone_0v7vtg3">
+        <cmmn:extensionElements>
+          <camunda:caseExecutionListener event="occur" class="de.camunda.cryptouni.CryptoUni.LifecycleListener" />
+        </cmmn:extensionElements>
+      </cmmn:milestone>
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="cmmn_adaptiveWay" name="Professor entscheidet selbst">
+      <cmmndi:Size width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_05j21t2" cmmnElementRef="CasePlanModel_05j21t2">
+        <dc:Bounds x="156" y="99" width="717" height="477" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_03h3y99_di" cmmnElementRef="PlanItem_1">
+        <dc:Bounds x="461" y="219" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_14r0f12_di" cmmnElementRef="PlanItem_1fn4i0n">
+        <dc:Bounds x="461" y="343" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0amulpq_di" cmmnElementRef="EntryCriterion_0amulpq">
+        <dc:Bounds x="451" y="246" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_12c73ch_di" cmmnElementRef="EntryCriterion_12c73ch">
+        <dc:Bounds x="451" y="370" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1cvhgbd_di" cmmnElementRef="PlanItem_1cvhgbd">
+        <dc:Bounds x="668" y="282" width="100" height="40" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0iv3xqh_di" cmmnElementRef="EntryCriterion_0iv3xqh">
+        <dc:Bounds x="658" y="290" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_07jtfdu_di" cmmnElementRef="PlanItemOnPart_07jtfdu" targetCMMNElementRef="EntryCriterion_0iv3xqh" isStandardEventVisible="true">
+        <di:waypoint x="561" y="259" />
+        <di:waypoint x="610" y="259" />
+        <di:waypoint x="610" y="304" />
+        <di:waypoint x="658" y="304" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="584" y="271.5" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_0vvguam_di" cmmnElementRef="PlanItemOnPart_0vvguam" targetCMMNElementRef="EntryCriterion_0iv3xqh" isStandardEventVisible="true">
+        <di:waypoint x="561" y="383" />
+        <di:waypoint x="610" y="383" />
+        <di:waypoint x="610" y="304" />
+        <di:waypoint x="658" y="304" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="584" y="333.5" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>

@@ -19,6 +19,12 @@ public class CheckCase implements JavaDelegate {
 		
 		System.out.print("\nCheckCase: " + execution.getVariable("status"));
 		
+		String status = (String) "zulassen";
+		
+		execution.setVariable("statusNew", status);
+		
+		System.out.print("\nInSynchronousTask: " + execution.getVariable("statusNew"));
+		
 
 	}
 
