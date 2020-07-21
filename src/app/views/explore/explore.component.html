@@ -66,8 +66,8 @@
               zoom="0.000001"
   ></pdf-viewer>
 
-<ng-container>
-<div *ngIf="!chatShowing || chatShowing === undefined" class="container text-right">
+<ng-container> <!--*ngIf="!chatShowing || chatShowing === undefined" -->
+<div class="container text-right">
 <img  src="../../assets/chat-symbol.png" id="logo" (click)="showChat()" class="d-inline-block align-top" alt="" width="100" height="100">
 <kendo-chat *ngIf="chatShowing" style="float: right"
   [messages]="feed | async"

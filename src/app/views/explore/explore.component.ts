@@ -101,7 +101,7 @@ export class ExploreComponent implements OnInit {
     console.log(this.modules)
 
 
-    if (this.searchString.length === 0)
+    if (!this.searchString || this.searchString.length === 0)
       return []
     else {
       let prefilteredModules = this.modules.filter(mod => mod.module.toLowerCase().includes(this.searchString.toLowerCase()) || mod.name.toLowerCase().includes(this.searchString.toLowerCase()) || this.searchString.toLowerCase().includes(mod.name.toLowerCase()) || mod.module.includes(this.modules.filter(mod => this.searchString.toLowerCase().includes(mod.name.toLowerCase())).map(mod => mod.module)[0]));
