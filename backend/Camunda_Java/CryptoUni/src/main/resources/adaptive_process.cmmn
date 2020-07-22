@@ -5,37 +5,61 @@
       <cmmn:extensionElements>
         <camunda:variableListener event="update" class="de.camunda.cryptouni.CryptoUni.CamundaBpmProcessApplication" />
       </cmmn:extensionElements>
-      <cmmn:planItem id="PlanItem_1" name="Abzulösendes Fach ist SSD" definitionRef="HumanTask_1lt07gy">
+      <cmmn:planItem id="PlanItem_1" name="Abzulösendes Fach ist nicht SSD" definitionRef="HumanTask_1lt07gy">
         <cmmn:documentation id="Documentation_0sdaapl">statusNew has to be updated to the value zulassen or ablehnen! The rest values have to be proved and completed! Then you can complete the Task.</cmmn:documentation>
         <cmmn:itemControl id="PlanItemControl_0avm26j" />
         <cmmn:entryCriterion id="EntryCriterion_0amulpq" sentryRef="Sentry_1gxgbkj" />
       </cmmn:planItem>
-      <cmmn:planItem id="PlanItem_1fn4i0n" name="Abzulösendes Fach ist nicht SSD" definitionRef="HumanTask_01j21k9">
-        <cmmn:itemControl id="PlanItemControl_03ahqx1" />
-        <cmmn:entryCriterion id="EntryCriterion_12c73ch" sentryRef="Sentry_04d5ap3" />
+      <cmmn:planItem id="PlanItem_1954man" name="Entscheidung getroffen" definitionRef="Milestone_14bkey4">
+        <cmmn:entryCriterion id="EntryCriterion_1vrv5ms" sentryRef="Sentry_1wsxpxc" />
       </cmmn:planItem>
-      <cmmn:planItem id="PlanItem_1cvhgbd" name="Status_New ausgewählt" definitionRef="Milestone_0v7vtg3">
-        <cmmn:entryCriterion id="EntryCriterion_0iv3xqh" sentryRef="Sentry_1imrxvc" />
+      <cmmn:planItem id="PlanItem_1evfxxu" name="Professor checkt Anzahl Sitzplätze im Hörsaal" definitionRef="HumanTask_061swg6">
+        <cmmn:exitCriterion id="EntryCriterion_1jfu22s" sentryRef="Sentry_0x8pdgb" />
+      </cmmn:planItem>
+      <cmmn:planItem id="PlanItem_1fn4i0n" name="Studentenleistungsnachweis überprüfen" definitionRef="HumanTask_01j21k9">
+        <cmmn:exitCriterion id="EntryCriterion_01so6wm" sentryRef="Sentry_1ik3izm" />
+      </cmmn:planItem>
+      <cmmn:planItem id="PlanItem_096ob36" definitionRef="Milestone_0twa8sh">
+        <cmmn:entryCriterion id="EntryCriterion_0v2ab8r" sentryRef="Sentry_1c2pmd5" />
       </cmmn:planItem>
       <cmmn:sentry id="Sentry_1gxgbkj">
         <cmmn:ifPart id="IfPart_19qjy7f">
-          <cmmn:condition id="Expression_13762iv">${moduleStandard_name=='SSD'}</cmmn:condition>
+          <cmmn:condition id="Expression_13762iv">${moduleStandard_name!='SSD'}</cmmn:condition>
         </cmmn:ifPart>
       </cmmn:sentry>
-      <cmmn:sentry id="Sentry_04d5ap3">
-        <cmmn:ifPart id="IfPart_14ko5rd">
-          <cmmn:condition id="Expression_0dbrh53">${moduleStandard_name!='SSD'}</cmmn:condition>
+      <cmmn:sentry id="Sentry_1wsxpxc">
+        <cmmn:planItemOnPart id="PlanItemOnPart_1js4kk4" sourceRef="PlanItem_1">
+          <cmmn:standardEvent>complete</cmmn:standardEvent>
+        </cmmn:planItemOnPart>
+        <cmmn:ifPart id="IfPart_1yq8hud">
+          <cmmn:condition id="Expression_0bzwqmo">${statusNew=='zulassen' || statusNew=='ablehnen'}</cmmn:condition>
         </cmmn:ifPart>
       </cmmn:sentry>
-      <cmmn:sentry id="Sentry_1imrxvc">
-        <cmmn:planItemOnPart id="PlanItemOnPart_07jtfdu" sourceRef="PlanItem_1">
+      <cmmn:sentry id="Sentry_1ik3izm">
+        <cmmn:planItemOnPart id="PlanItemOnPart_0nokumd" sourceRef="PlanItem_1evfxxu">
           <cmmn:standardEvent>complete</cmmn:standardEvent>
         </cmmn:planItemOnPart>
-        <cmmn:planItemOnPart id="PlanItemOnPart_0vvguam" sourceRef="PlanItem_1fn4i0n">
+        <cmmn:ifPart id="IfPart_15nux77">
+          <cmmn:condition id="Expression_0cs9o09">${statusNew!='warten'}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:sentry id="Sentry_1c2pmd5">
+        <cmmn:planItemOnPart id="PlanItemOnPart_1o2494z" sourceRef="PlanItem_1evfxxu">
           <cmmn:standardEvent>complete</cmmn:standardEvent>
         </cmmn:planItemOnPart>
-        <cmmn:ifPart id="IfPart_0gt7s2i">
-          <cmmn:condition id="Expression_166wvhx">${statusNew=='zulassen' || statusNew=='ablehnen'}</cmmn:condition>
+        <cmmn:planItemOnPart id="PlanItemOnPart_1jkweu9" sourceRef="PlanItem_1fn4i0n">
+          <cmmn:standardEvent>complete</cmmn:standardEvent>
+        </cmmn:planItemOnPart>
+        <cmmn:ifPart id="IfPart_18vh7nx">
+          <cmmn:condition id="Expression_15bhutq">${statusNew!='warten'}</cmmn:condition>
+        </cmmn:ifPart>
+      </cmmn:sentry>
+      <cmmn:sentry id="Sentry_0x8pdgb">
+        <cmmn:planItemOnPart id="PlanItemOnPart_09kue5o" sourceRef="PlanItem_1fn4i0n">
+          <cmmn:standardEvent>complete</cmmn:standardEvent>
+        </cmmn:planItemOnPart>
+        <cmmn:ifPart id="IfPart_0ggjvu0">
+          <cmmn:condition id="Expression_1afdjn7">${statusNew!='warten'}</cmmn:condition>
         </cmmn:ifPart>
       </cmmn:sentry>
       <cmmn:humanTask id="HumanTask_1lt07gy" name="Abzulösendes Fach ist SSD" camunda:assignee="professor">
@@ -43,61 +67,104 @@
           <camunda:variableListener event="update" />
         </cmmn:extensionElements>
       </cmmn:humanTask>
-      <cmmn:humanTask id="HumanTask_01j21k9" camunda:assignee="professor" />
-      <cmmn:milestone id="Milestone_0v7vtg3">
+      <cmmn:milestone id="Milestone_14bkey4" name="Entscheidung getroffen" />
+      <cmmn:humanTask id="HumanTask_061swg6" name="Professor checkt Anzahl Sitzplätze im Hörsaal" camunda:formKey="embedded:app:forms/test.html" camunda:assignee="professor">
         <cmmn:extensionElements>
-          <camunda:caseExecutionListener event="occur" class="de.camunda.cryptouni.CryptoUni.LifecycleListener" />
+          <camunda:taskListener event="complete" class="de.camunda.cryptouni.CryptoUni.MyTaskCreateListener" />
         </cmmn:extensionElements>
-      </cmmn:milestone>
+      </cmmn:humanTask>
+      <cmmn:humanTask id="HumanTask_01j21k9" camunda:formKey="embedded:app:forms/test.html" camunda:assignee="professor" />
+      <cmmn:milestone id="Milestone_0twa8sh" name="Apdaptive Entscheidung getroffen" />
     </cmmn:casePlanModel>
   </cmmn:case>
   <cmmndi:CMMNDI>
     <cmmndi:CMMNDiagram id="cmmn_adaptiveWay" name="Professor entscheidet selbst">
       <cmmndi:Size width="500" height="500" />
       <cmmndi:CMMNShape id="DI_CasePlanModel_05j21t2" cmmnElementRef="CasePlanModel_05j21t2">
-        <dc:Bounds x="156" y="99" width="717" height="477" />
+        <dc:Bounds x="156" y="99" width="509" height="468" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="PlanItem_03h3y99_di" cmmnElementRef="PlanItem_1">
-        <dc:Bounds x="461" y="219" width="100" height="80" />
-        <cmmndi:CMMNLabel />
-      </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="PlanItem_14r0f12_di" cmmnElementRef="PlanItem_1fn4i0n">
-        <dc:Bounds x="461" y="343" width="100" height="80" />
+        <dc:Bounds x="208" y="153" width="100" height="80" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="EntryCriterion_0amulpq_di" cmmnElementRef="EntryCriterion_0amulpq">
-        <dc:Bounds x="451" y="246" width="20" height="28" />
+        <dc:Bounds x="198" y="180" width="20" height="28" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="EntryCriterion_12c73ch_di" cmmnElementRef="EntryCriterion_12c73ch">
-        <dc:Bounds x="451" y="370" width="20" height="28" />
+      <cmmndi:CMMNShape id="PlanItem_1954man_di" cmmnElementRef="PlanItem_1954man">
+        <dc:Bounds x="530" y="173" width="100" height="40" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="PlanItem_1cvhgbd_di" cmmnElementRef="PlanItem_1cvhgbd">
-        <dc:Bounds x="668" y="282" width="100" height="40" />
+      <cmmndi:CMMNShape id="EntryCriterion_1vrv5ms_di" cmmnElementRef="EntryCriterion_1vrv5ms">
+        <dc:Bounds x="520" y="179" width="20" height="28" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="EntryCriterion_0iv3xqh_di" cmmnElementRef="EntryCriterion_0iv3xqh">
-        <dc:Bounds x="658" y="290" width="20" height="28" />
+      <cmmndi:CMMNShape id="PlanItem_052qlv0_di" cmmnElementRef="PlanItem_1evfxxu">
+        <dc:Bounds x="291" y="281" width="100" height="80" />
         <cmmndi:CMMNLabel />
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNEdge id="PlanItemOnPart_07jtfdu_di" cmmnElementRef="PlanItemOnPart_07jtfdu" targetCMMNElementRef="EntryCriterion_0iv3xqh" isStandardEventVisible="true">
-        <di:waypoint x="561" y="259" />
-        <di:waypoint x="610" y="259" />
-        <di:waypoint x="610" y="304" />
-        <di:waypoint x="658" y="304" />
+      <cmmndi:CMMNEdge id="PlanItemOnPart_1js4kk4_di" cmmnElementRef="PlanItemOnPart_1js4kk4" targetCMMNElementRef="EntryCriterion_1vrv5ms" isStandardEventVisible="true">
+        <di:waypoint x="308" y="193" />
+        <di:waypoint x="414" y="193" />
+        <di:waypoint x="414" y="192" />
+        <di:waypoint x="520" y="192" />
         <cmmndi:CMMNLabel>
-          <dc:Bounds x="584" y="271.5" width="51" height="12" />
+          <dc:Bounds x="470" y="178" width="51" height="12" />
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
-      <cmmndi:CMMNEdge id="PlanItemOnPart_0vvguam_di" cmmnElementRef="PlanItemOnPart_0vvguam" targetCMMNElementRef="EntryCriterion_0iv3xqh" isStandardEventVisible="true">
-        <di:waypoint x="561" y="383" />
-        <di:waypoint x="610" y="383" />
-        <di:waypoint x="610" y="304" />
-        <di:waypoint x="658" y="304" />
+      <cmmndi:CMMNShape id="PlanItem_14r0f12_di" cmmnElementRef="PlanItem_1fn4i0n">
+        <dc:Bounds x="287" y="439" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="ExitCriterion_1goh1b9_di" cmmnElementRef="EntryCriterion_01so6wm">
+        <dc:Bounds x="331" y="425" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_0nokumd_di" cmmnElementRef="PlanItemOnPart_0nokumd" targetCMMNElementRef="EntryCriterion_01so6wm" isStandardEventVisible="true">
+        <di:waypoint x="341" y="361" />
+        <di:waypoint x="341" y="425" />
         <cmmndi:CMMNLabel>
-          <dc:Bounds x="584" y="333.5" width="51" height="12" />
+          <dc:Bounds x="313" y="401" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="PlanItem_096ob36_di" cmmnElementRef="PlanItem_096ob36">
+        <dc:Bounds x="530" y="385" width="100" height="40" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0v2ab8r_di" cmmnElementRef="EntryCriterion_0v2ab8r">
+        <dc:Bounds x="520" y="389" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_1o2494z_di" cmmnElementRef="PlanItemOnPart_1o2494z" targetCMMNElementRef="EntryCriterion_0v2ab8r" isStandardEventVisible="true">
+        <di:waypoint x="391" y="321" />
+        <di:waypoint x="456" y="321" />
+        <di:waypoint x="456" y="403" />
+        <di:waypoint x="520" y="403" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="430" y="352" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_1jkweu9_di" cmmnElementRef="PlanItemOnPart_1jkweu9" targetCMMNElementRef="EntryCriterion_0v2ab8r" isStandardEventVisible="true">
+        <di:waypoint x="387" y="479" />
+        <di:waypoint x="454" y="479" />
+        <di:waypoint x="454" y="403" />
+        <di:waypoint x="520" y="403" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="428" y="431" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="ExitCriterion_0ru8iv3_di" cmmnElementRef="EntryCriterion_1jfu22s">
+        <dc:Bounds x="281" y="309" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_09kue5o_di" cmmnElementRef="PlanItemOnPart_09kue5o" targetCMMNElementRef="EntryCriterion_1jfu22s" isStandardEventVisible="true">
+        <di:waypoint x="287" y="479" />
+        <di:waypoint x="208" y="479" />
+        <di:waypoint x="208" y="323" />
+        <di:waypoint x="281" y="323" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="288" y="378" width="51" height="12" />
         </cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
     </cmmndi:CMMNDiagram>
